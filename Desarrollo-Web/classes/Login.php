@@ -65,8 +65,6 @@ class Login
                 // username field)
                 $sql = "SELECT user_name, user_email, idRol, user_password_hash  FROM users WHERE user_name = '" . $user_name . "' OR user_email = '" . $user_name . "';";
                 $result_of_login_check = $this->db_connection->query($sql);
-                $sql1 = "SELECT user_name FROM users WHERE activado = true  and user_name = '" . $user_name . "' OR user_email = '" . $user_name . "'; ";
-                $result_of_veri_check = $this->db_connection->query($sql1);
 
                 // if this user exists
                 if ($result_of_login_check->num_rows == 1) {
@@ -77,15 +75,11 @@ class Login
                     // using PHP 5.5's password_verify() function to check if the provided password fits
                     // the hash of that user's password
                     if (password_verify($_POST['user_password'], $result_row->user_password_hash)) {
-                        if ($result_of_veri_check->num_rows == 1) {
                             // write user data into PHP SESSION (a file on your server)
                             $_SESSION['user_name'] = $result_row->user_name;
                             $_SESSION['user_email'] = $result_row->user_email;
                             $_SESSION['user_rol'] = $result_row->idRol;
                             $_SESSION['user_login_status'] = 1;
-                        } else {
-                            echo '<script language="javascript">alert("Tu cuenta aun no fue verificado");</script>';
-                        }
                     } else {
                         $this->errors[] = "Contraseña incorrecta. Intententalo devuelta.";
                     }
