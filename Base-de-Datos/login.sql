@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_name` varchar(64) DEFAULT NULL,
   `user_password_hash` varchar(255) DEFAULT NULL,
   `user_email` varchar(64) DEFAULT NULL,
-  `activado` tinyint(1) NOT NULL DEFAULT '0',
   `idRol` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   KEY `idRol` (`idRol`)
