@@ -16,12 +16,11 @@ if (isset($registration)) {
 
 <!-- register form -->
 <?php
-  /*require_once("config/db.php");
+  require_once("config/db.php");
   $conexion=conexion();
   $statement=$conexion->prepare("SELECT `idRol`, `rol_descripcion` FROM `rol` where rol_descripcion <> 'Administrador'");
   $statement->execute();
   $datos=$statement->fetchAll();
-*/
 ?>
 
 <!DOCTYPE html>
