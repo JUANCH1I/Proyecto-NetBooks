@@ -1,0 +1,123 @@
+html,
+body {
+    height: 100%;
+    background: linear-gradient(to bottom right, rgb(241, 81, 148), rgb(243, 152, 16));
+
+}
+
+form {
+    height: 50%;
+    width: 30%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: 5px;
+    background-color: rgb(245, 246, 247);
+}
+
+#formulario {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#nom {
+    font-size: 29px;
+    margin-top: 30px;
+}
+
+
+#submit {
+    margin-top: 30px;
+}
+
+.card {
+    width: 250px;
+    background: #F4F6FB;
+    border: 1px solid white;
+    box-shadow: 10px 10px 64px 0px rgba(180, 180, 207, 0.75);
+    -webkit-box-shadow: 10px 10px 64px 0px rgba(186, 186, 202, 0.75);
+    -moz-box-shadow: 10px 10px 64px 0px rgba(208, 208, 231, 0.75);
+}
+
+.form {
+    padding: 25px;
+}
+
+.card_header {
+    display: flex;
+    align-items: center;
+}
+
+.card svg {
+    color: #7878bd;
+    margin-bottom: 20px;
+    margin-right: 5px;
+}
+
+.form_heading {
+    padding-bottom: 20px;
+    font-size: 21px;
+    color: #7878bd;
+}
+
+.field {
+    padding-bottom: 10px;
+}
+
+.input {
+    border-radius: 5px;
+    background-color: #e9e9f7;
+    padding: 5px;
+    width: 100%;
+    color: #7a7ab3;
+    border: 1px solid #dadaf7
+}
+
+
+.input:focus-visible {
+    outline: 1px solid #aeaed6;
+}
+
+.input::placeholder {
+    color: #bcbcdf;
+}
+
+label {
+    color: #B2BAC8;
+    font-size: 14px;
+    display: block;
+    padding-bottom: 4px;
+}
+
+button {
+    background-color: #7878bd;
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 7px 12px;
+    font-weight: 500;
+    color: white;
+}
+
+button:hover {
+    background-color: #5f5f9c;
+}
+#op{
+    margin-top:50px;
+    flex-direction:column;
+    display:flex;
+}
+
+#back {
+    font-size: 15px;
+    text-decoration: none;
+    color: #7878bd;
+
+}
+#back:hover{
+    color:#401031;
+}
