@@ -1,2 +1,41 @@
-/config/db.php
-/config/
+# Ignorar archivos de configuración
+/config/*.php
+
+# Ignorar archivos de caché
+/cache/
+!cache/index.html
+
+# Ignorar archivos de logs
+/log/
+!log/index.html
+
+# Ignorar archivos de respaldo
+*.bak
+*.swp
+
+# Ignorar archivos compilados
+*.o
+*.ko
+*.a
+*.pyc
+*.class
+
+# Ignorar la carpeta vendor (si estás usando Composer)
+/vendor/
+
+# Ignorar la carpeta node_modules (si estás usando Node.js)
+/node_modules/
+
+# Ignorar archivos sensibles (contraseñas, claves, etc.)
+*.env
+*.key
+*.pem
+*.pub
+*.p12
+*.pfx
+
+# Ignorar archivos de pruebas
+/tests/
+
+# Ignorar archivos de documentación
+/docs/
