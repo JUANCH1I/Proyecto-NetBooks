@@ -6,8 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-  <title>Inicio</title>
-  <link rel="stylesheet" href="views/templates/stylelog.css">
+  <title>Olimpiadas</title>
 </head>
 
 <body>
@@ -21,7 +20,7 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href='/Desarrollo-Web/index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
+          <li><a href="../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href="netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
           <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
           <li><a href="index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
@@ -33,19 +32,6 @@
       </div>
     </div>
   </header>
-  <div class="cuerpo">
-    <a href="netbook/abm.php" class="card">
-      NetBooks
-    </a>
+  <div id="cuerpo">
+    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark"><i class="fa-brands fa-instagram"></i></a>
   </div>
-  <footer class="bg-light text-center text-lg-start">
-    <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2023 Copyright:
-      <a class="text-dark" href="https://mdbootstrap.com/">Proyecto NetBooks</a>
-    </div>
-    <!-- Copyright -->
-  </footer>
-</body>
-
-</html>
