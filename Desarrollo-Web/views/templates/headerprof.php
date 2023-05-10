@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-  <title>Inicio</title>
+  <title>Presma</title>
   <link rel="stylesheet" href="views/templates/stylelog.css">
 </head>
 
@@ -42,7 +42,7 @@
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
       © 2023 Copyright:
-      <a class="text-dark" href="https://mdbootstrap.com/">Proyecto NetBooks</a>
+      <a class="text-dark" href="https://mdbootstrap.com/">Presma</a>
     </div>
     <!-- Copyright -->
   </footer>
