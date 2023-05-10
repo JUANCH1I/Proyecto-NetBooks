@@ -22,7 +22,7 @@ $conexion = conexion();
 $datos = []; // Valor predeterminado
 
 if ($conexion) {
-    $statement = $conexion->prepare("SELECT `idRol`, `rol_descripcion` FROM `rol` where rol_descripcion <> 'Administrador'");
+    $statement = $conexion->prepare("SELECT `idRol`, `rol_descripcion` FROM `rol` where rol_descripcion <> 'Administrador' and rol_descripcion <> 'Alumno'");
     $statement->execute();
     $datos = $statement->fetchAll(); // Actualiza $datos si la conexión es exitosa
 } else {

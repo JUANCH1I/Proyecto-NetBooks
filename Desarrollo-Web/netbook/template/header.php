@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-  <title>Olimpiadas</title>
+  <title>Proyect NetBooks</title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
           <li><a href="../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href="netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
           <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
+          <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
         <div class="text-end" bis_skin_checked="1">

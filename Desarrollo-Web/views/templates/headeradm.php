@@ -24,7 +24,7 @@
           <li><a href='/Desarrollo-Web/index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href="netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
           <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
+          <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
         <div class="text-end" bis_skin_checked="1">
