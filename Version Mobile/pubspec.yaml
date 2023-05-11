@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  mobile_scanner: ^3.2.0
   flutter:
   
     sdk: flutter
@@ -39,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
 
@@ -61,6 +63,7 @@ flutter:
       - asset: fonts\PTSansNarrow-Bold.ttf
   assets:
     - assets/google.png
+    - assets/et29.jpg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

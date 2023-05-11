@@ -1,0 +1,9 @@
+Para probar la app hay que dirigirse a la carpeta APK y descargar la versión que corresponda al dispositivo donde se va a probar:
+-El archivo app-armeabi-v7a-release.apk corresponde a dispositivos de 32 bits
+-Los archivos app-x86_64-release.apk y app-arm64-v8a-release.apk corresponden a dispositivos de 64 bits
+-De no saber cuál es la adecuada para el dispositivo descargar el archivo app-release.apk, donde estan compiladas las 3 versiones. El dispositivo va a instalar la que corresponda.
+
+Una vez instalada la apk, cuando se abra será redirigido automáticamente a la página de Inicio de Sesión. 
+Al 10/5 no está implementada esta funcionalidad, por lo que si se selecciona el boton que dice "Iniciar Sesion" se dirigirá automáticamente al Home, el cual tiene solo un botón que lleva a la pestaña de escaneo de QR.
+Actualmente el escaneo está implementado, por lo que si se intenta leer un código QR con la cámara el programa lo detectará y lo redirigirá nuevamente a la página de Home.
+ 
