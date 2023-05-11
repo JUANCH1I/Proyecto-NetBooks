@@ -1,4 +1,4 @@
-Para probar la app hay que dirigirse a la carpeta APK y descargar la versión que corresponda al dispositivo donde se va a probar:
+Para probar la app hay que dirigirse a la carpeta APK y descargar en el celular la versión que corresponda al dispositivo:
 -El archivo app-armeabi-v7a-release.apk corresponde a dispositivos de 32 bits
 -Los archivos app-x86_64-release.apk y app-arm64-v8a-release.apk corresponden a dispositivos de 64 bits
 -De no saber cuál es la adecuada para el dispositivo descargar el archivo app-release.apk, donde estan compiladas las 3 versiones. El dispositivo va a instalar la que corresponda.
