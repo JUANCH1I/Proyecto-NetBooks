@@ -54,8 +54,8 @@ class Registration
             $this->errors[] = "Email cannot be longer than 64 characters";
         } elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = "El formato de tu correo electronico no es valido";
-        } elseif (substr_compare($_POST['user_email'], "@alu.tecnica29de6.edu.ar", -strlen("@alu.tecnica29de6.edu.ar")) !== 0) {
-            $this->errors[] = "El dominio de tu correo electronico no es valido. Debe ser @alu.tecnica29de6.edu.ar";
+        } elseif (substr_compare($_POST['user_email'], "@alu.tecnica29de6.edu.ar", -strlen("@alu.tecnica29de6.edu.ar")) !== 0 && substr_compare($_POST['user_email'], "@tecnica29de6.edu.ar", -strlen("@tecnica29de6.edu.ar")) !== 0) {
+            $this->errors[] = "El dominio de tu correo electronico no es valido. Debe ser @alu.tecnica29de6.edu.ar o @tecnica29de6.edu.ar";
         } elseif (!empty($_POST['user_name'])
             && strlen($_POST['user_name']) <= 64
             && strlen($_POST['user_name']) >= 2
@@ -63,6 +63,7 @@ class Registration
             && !empty($_POST['user_email'])
             && strlen($_POST['user_email']) <= 64
             && filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)
+            && (substr_compare($_POST['user_email'], "@alu.tecnica29de6.edu.ar", -strlen("@alu.tecnica29de6.edu.ar")) === 0 || substr_compare($_POST['user_email'], "@tecnica29de6.edu.ar", -strlen("@tecnica29de6.edu.ar")) === 0)
             && !empty($_POST['user_password_new'])
             && !empty($_POST['user_password_repeat'])
             && ($_POST['user_password_new'] === $_POST['user_password_repeat'])
