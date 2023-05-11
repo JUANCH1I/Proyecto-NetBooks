@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_notebooks/paginas/home/ui/home.dart';
+import 'package:proyecto_notebooks/paginas/login/ui/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         title: 'Proyecto',
         theme: ThemeData(
@@ -21,110 +24,91 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 139, 178, 204)),
         ),
-        home: MyHomePage(),
+        home: Cargando(),
+        
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
-  
+  var logueado = 0;
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
+class Cargando extends StatefulWidget{
   @override
-  MyHomePageState createState() {
-    return MyHomePageState();
+  State<StatefulWidget> createState() {
+    return CargandoState();
   }
+
 }
 
-class MyHomePageState extends State<MyHomePage>{
-    final _formKey = GlobalKey<FormState>();
-    @override
-   Widget build(BuildContext context) {
+class CargandoState extends State<Cargando>{
+  @override
+  Widget build(BuildContext context) {
     
-
     return Scaffold(
-      
-      body: ListView(
-        
-        children: [
-          Center(
-            child: SafeArea(
-              child: 
-              Text('Iniciar Sesión', style: TextStyle(
-                fontSize: 40,fontWeight: FontWeight.bold))
-            )
-          ),
-          SizedBox(height: 50),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-              Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-              child: TextField(
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                hintText: 'Mail',
-                icon: Icon(Icons.person))
-              )
-              ),
-              SizedBox(height: 10),
-              Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-              child: TextField(
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                hintText: 'Contraseña',
-                icon: Icon(Icons.lock)))
-              ),
-              SizedBox(height: 15,),
-              ElevatedButton(
-                onPressed: () {},
-                                    
-                child: const Text('Iniciar Sesión')),
-          ],
-          )
-          ),
-          
-          SizedBox(height: 5),
-          TextButton(
-            onPressed: () {
-              
-            },
-            child: Text('¿Olvidaste la contraseña?',style: TextStyle(decoration:TextDecoration.underline),),
+              body: buildBody(context),
+            );
+  }
 
+  Widget buildBody(BuildContext context){
+    
+    return FutureBuilder(
+      future: _login(),
+      builder: (context, snapshot) {
+        return Center(
+          
+          child: SafeArea(child: 
+          Column(
+            children: [
+              
+              Image.asset('assets/et29.jpg', width: 200, height: 200,),
+              SizedBox(height: 50,),
+              CircularProgressIndicator(),
+            ],
           ),
-          SizedBox(height: 20),
-          Center(
-            child: Text('O iniciar sesión con:')),
-         
+          )
           
-         
-           SizedBox(
-            height: 60,
-            
-             child: IconButton(
-              onPressed: () { 
-              },
-              icon: Image(
-                image:AssetImage('assets/google.png'),
-                height: 60,
-                ),
-              iconSize: 10,
-             ),
-           ),
-         
-          
-        ],
-        
-      ),
+        );
+      },
     );
   }
+
+  Future<String> _login() async {
+    var logueado = 0;
+    await Future.delayed(Duration(seconds: 3)).then((value) {
+      switch(logueado){
+        case 0: 
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return Login();
+          },
+        ),
+      );
+        
+        break;
+      case 1:
+        Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return Home();
+          },
+        ),
+      );
+      break;
+      }
+      
+    });
+
+    return "";
   }
+
+}
+
  
   
   
