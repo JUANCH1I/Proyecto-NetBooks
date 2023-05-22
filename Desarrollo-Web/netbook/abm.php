@@ -92,8 +92,7 @@ if ($error) {
                 <td><?php echo escapar($fila["registros.fechas_extendidas"]); ?></td>
                 <td><?php echo escapar($fila["materiales.nombre"]); ?></td>
                 <td>
-                  <a href="<?= 'borrar.php?id=' . escapar($fila["user_id"]) ?>">🗑️Borrar</a>
-                  <a href="<?= 'editar.php?id=' . escapar($fila["user_id"]) ?>">✏️Editar</a>
+                  <a href="<?= 'sancion.php?id=' . escapar($fila["registros.idregistro"]) ?>">🗑️Borrar</a>
                 </td>
               </tr>
           <?php

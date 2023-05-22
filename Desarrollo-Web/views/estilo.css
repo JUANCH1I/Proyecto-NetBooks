@@ -1,12 +1,11 @@
 html,
 body {
     height: 100%;
-    background: linear-gradient(to bottom right, rgb(241, 81, 148), rgb(243, 152, 16));
-
+    background-image: linear-gradient(135deg, #87b5ff 10%, #a1e1ff 100%);
 }
 
 form {
-    height: 50%;
+    height: 60%;
     width: 30%;
     flex-direction: column;
     justify-content: center;

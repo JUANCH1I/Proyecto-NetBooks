@@ -36,6 +36,7 @@ class Registration
      */
     private function registerNewUser()
     {
+        $dominiosValidos = array("@alu.tecnica29de6.edu.ar", "@tecnica29de6.edu.ar");
         if (empty($_POST['user_name'])) {
             $this->errors[] = "Usuario vacio";
         } elseif (empty($_POST['user_password_new']) || empty($_POST['user_password_repeat'])) {
@@ -54,9 +55,9 @@ class Registration
             $this->errors[] = "Email cannot be longer than 64 characters";
         } elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = "El formato de tu correo electronico no es valido";
-        } elseif (substr_compare($_POST['user_email'], "@alu.tecnica29de6.edu.ar", -strlen("@alu.tecnica29de6.edu.ar")) !== 0 && substr_compare($_POST['user_email'], "@tecnica29de6.edu.ar", -strlen("@tecnica29de6.edu.ar")) !== 0) {
+        } elseif (!array_search($_POST['user_email'], $dominiosValidos, false)) {
             $this->errors[] = "El dominio de tu correo electronico no es valido. Debe ser @alu.tecnica29de6.edu.ar o @tecnica29de6.edu.ar";
-        } elseif (!empty($_POST['user_name'])
+        } elseif (!empty($_POST['user_name']) 
             && strlen($_POST['user_name']) <= 64
             && strlen($_POST['user_name']) >= 2
             && preg_match('/^[a-z\d]{2,64}$/i', $_POST['user_name'])
