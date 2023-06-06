@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_notebooks/paginas/qr/ui/qrscan.dart';
+import 'package:Presma/paginas/qr/ui/qrscan.dart';
 
 class Home extends StatelessWidget{
   @override

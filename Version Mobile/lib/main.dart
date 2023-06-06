@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_notebooks/paginas/home/ui/home.dart';
-import 'package:proyecto_notebooks/paginas/login/ui/login.dart';
+import 'package:Presma/paginas/home/ui/home.dart';
+import 'package:Presma/paginas/login/ui/login.dart';
 
 void main() {
   runApp(MyApp());
