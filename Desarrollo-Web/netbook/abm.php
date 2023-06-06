@@ -8,7 +8,7 @@ if (isset($_POST['submit']) && !hash_equals($_SESSION['csrf'], $_POST['csrf'])) 
 
 $error = false;
 $config = include('../config/db.php');
-;
+
 
 try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
@@ -53,6 +53,7 @@ if ($error) {
   <div class="row">
     <div class="col-md-12">
       <a href="../index.php" class="btn btn-primary mt-4">Volver al inicio</a>
+      <a href="visual.php" class="btn btn-primary mt-4">Forma visual</a>
       <hr>
 
       <form method="post" class="form-inline">
