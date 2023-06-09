@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Presma/paginas/qr/qrControlador.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
