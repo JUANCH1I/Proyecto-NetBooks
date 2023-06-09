@@ -55,8 +55,6 @@ class Registration
             $this->errors[] = "Email cannot be longer than 64 characters";
         } elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = "El formato de tu correo electronico no es valido";
-        } elseif (!array_search($_POST['user_email'], $dominiosValidos, false)) {
-            $this->errors[] = "El dominio de tu correo electronico no es valido. Debe ser @alu.tecnica29de6.edu.ar o @tecnica29de6.edu.ar";
         } elseif (!empty($_POST['user_name']) 
             && strlen($_POST['user_name']) <= 64
             && strlen($_POST['user_name']) >= 2
