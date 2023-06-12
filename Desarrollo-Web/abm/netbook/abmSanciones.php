@@ -32,8 +32,7 @@ if (isset($_POST['submit'])) {
 
     $sentencia = $conexion->prepare($consultaSQL);
     $sentencia->execute($sancion);
-
-  } catch(PDOException $error) {
+  } catch (PDOException $error) {
     $resultado['error'] = true;
     $resultado['mensaje'] = $error->getMessage();
   }
@@ -44,7 +43,7 @@ if (isset($_POST['submit'])) {
 
 <?php
 if (isset($resultado)) {
-  ?>
+?>
   <div class="container mt-3">
     <div class="row">
       <div class="col-md-12">
@@ -54,7 +53,7 @@ if (isset($resultado)) {
       </div>
     </div>
   </div>
-  <?php
+<?php
 }
 ?>
 
@@ -76,15 +75,15 @@ if (isset($resultado)) {
           <label for="dni">Dni</label>
           <input type="text" name="dni" id="dni" class="form-control">
         </div>
-          <br>
-          <div class="form-group">
-            <label for="activado">Activado</label>
-            <select name="activado" id="activado">
-              <option value="1" class="input">Si</option>
-              <option value="0" class="input">No</option>
-            </select>
-          </div>
-          <br>
+        <br>
+        <div class="form-group">
+          <label for="activado">Activado</label>
+          <select name="activado" id="activado">
+            <option value="1" class="input">Si</option>
+            <option value="0" class="input">No</option>
+          </select>
+        </div>
+        <br>
         <div class="form-group">
           <input name="csrf" type="hidden" value="<?php echo escapar($_SESSION['csrf']); ?>">
           <input type="submit" name="submit" class="btn btn-primary" value="Enviar">

@@ -1,5 +1,5 @@
 <?php
-include 'funciones.php';
+include '../funciones.php';
 
 csrf();
 if (isset($_POST['submit']) && !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
@@ -7,17 +7,16 @@ if (isset($_POST['submit']) && !hash_equals($_SESSION['csrf'], $_POST['csrf'])) 
 }
 
 $error = false;
-$config = include('../config/db.php');
-
+$config = include('../db.php');
 
 try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
   if (isset($_POST['apellido'])) {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, registros.periodo_de_prestamo, registros.fechas_extendidas, materiales.nombre from registros inner join users on registros.idusuario = users.user_id inner join materiales on materiales.idmaterial = registros.idmaterial";
+    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion,  CASE when activado=0 then 'No' else 'Si' end as activado FROM users inner join rol on users.idRol =rol.idRol AND user_name LIKE '%" . $_POST['apellido'] . "%' limit 100";
   } else {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, registros.periodo_de_prestamo, registros.fechas_extendidas, materiales.nombre from registros inner join users on registros.idusuario = users.user_id inner join materiales on materiales.idmaterial = registros.idmaterial";
+    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion, activado, CASE when activado=0 then 'No' else 'Si' end as activado FROM users inner join rol on users.idRol =rol.idRol limit 100";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -28,10 +27,10 @@ try {
   $error = $error->getMessage();
 }
 
-$titulo = isset($_POST['apellido']) ? 'Lista de prestamos (' . $_POST['apellido'] . ')' : 'Lista de alumnos';
+$titulo = isset($_POST['apellido']) ? 'Lista de alumnos (' . $_POST['apellido'] . ')' : 'Lista de alumnos';
 ?>
 
-<?php include "template/header.php"; ?>
+<?php include "../template/header.php"; ?>
 
 <?php
 if ($error) {
@@ -52,13 +51,13 @@ if ($error) {
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <a href="../index.php" class="btn btn-primary mt-4">Volver al inicio</a>
-      <a href="visual.php" class="btn btn-primary mt-4">Forma visual</a>
+      <a href="crear.php" class="btn btn-primary mt-4">Crear alumno</a>
+      <a href="/Desarrollo-Web/index.php" class="btn btn-primary mt-4">Volver al inicio</a>
       <hr>
 
       <form method="post" class="form-inline">
         <div class="form-group mr-3">
-          <input type="text" id="apellido" name="apellido" placeholder="Buscar por alumno" class="form-control">
+          <input type="text" id="apellido" name="apellido" placeholder="Buscar por apellido" class="form-control">
         </div>
         <input name="csrf" type="hidden" value="<?php echo escapar($_SESSION['csrf']); ?>"><br>
         <button type="submit" name="submit" class="btn btn-primary">Ver resultados</button>
@@ -75,10 +74,10 @@ if ($error) {
         <thead>
           <tr>
             <th>#</th>
-            <th>Alumno</th>
-            <th>Periodo prestamo</th>
-            <th>Fechas extendidas</th>
-            <th>Material retirado</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Activado</th>
           </tr>
         </thead>
         <tbody>
@@ -87,13 +86,14 @@ if ($error) {
             foreach ($alumnos as $fila) {
           ?>
               <tr>
-                <td><?php echo escapar($fila["registros.idregistro"]); ?></td>
-                <td><?php echo escapar($fila["users.user_name"]); ?></td>
-                <td><?php echo escapar($fila["registros.periodo_de_prestamo"]); ?></td>
-                <td><?php echo escapar($fila["registros.fechas_extendidas"]); ?></td>
-                <td><?php echo escapar($fila["materiales.nombre"]); ?></td>
+                <td><?php echo escapar($fila["user_id"]); ?></td>
+                <td><?php echo escapar($fila["user_name"]); ?></td>
+                <td><?php echo escapar($fila["user_email"]); ?></td>
+                <td><?php echo escapar($fila["rol_descripcion"]); ?></td>
+                <td><?php echo escapar($fila["activado"]); ?></td>
                 <td>
-                  <a href="<?= 'sancion.php?id=' . escapar($fila["registros.idregistro"]) ?>">🗑️Borrar</a>
+                  <a href="<?= 'borrar.php?id=' . escapar($fila["user_id"]) ?>">🗑️Borrar</a>
+                  <a href="<?= 'editar.php?id=' . escapar($fila["user_id"]) ?>">✏️Editar</a>
                 </td>
               </tr>
           <?php
@@ -106,4 +106,4 @@ if ($error) {
   </div>
 </div>
 
-<?php include "template/footer.php"; ?>
+<?php include "../template/footer.php"; ?>
