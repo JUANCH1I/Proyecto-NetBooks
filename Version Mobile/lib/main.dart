@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         
         debugShowCheckedModeBanner: false,
-        title: 'Proyecto',
+        title: 'Presma',
         theme: ThemeData(
           fontFamily: 'PTSansNarrow',
           useMaterial3: true,
@@ -61,6 +61,7 @@ class CargandoState extends State<Cargando>{
           
           child: SafeArea(child: 
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               
               Image.asset('assets/et29.jpg', width: 200, height: 200,),

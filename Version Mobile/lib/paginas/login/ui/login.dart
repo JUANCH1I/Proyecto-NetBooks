@@ -1,6 +1,10 @@
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
+import 'package:http/http.dart' as http;
 
 
 class Login extends StatefulWidget {
@@ -12,9 +16,14 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login>{
     final _formKey = GlobalKey<FormState>();
+
+   TextEditingController user= new TextEditingController();
+TextEditingController pass= new TextEditingController();
+
+
+
     @override
    Widget build(BuildContext context) {
-   
 
     return Scaffold(
       
@@ -54,7 +63,8 @@ class LoginState extends State<Login>{
               SizedBox(height: 15,),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home(),));
+                  //login();
+                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
                 },
                                     
                 child: const Text('Iniciar Sesión')),
