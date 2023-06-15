@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:Presma/paginas/qr/qrControlador.dart';
-import 'package:Presma/paginas/qr/qrdata.dart';
+import 'package:Presma/paginas/qr/modelo/prestamoData.dart';
+import 'package:Presma/paginas/qr/controlador/qrControlador.dart';
 import 'package:flutter/material.dart';
 import 'package:Presma/paginas/qr/ui/qrscan.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:http/http.dart' as http;
 class Home extends StatefulWidget {
   
   Home({super.key});
@@ -21,15 +19,13 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home>{
 
-  List<QrData> listaQr = [];
+  List<PrestamoData> listaPrestamo = [];
   StreamController _streamController = StreamController();
-  insertarPrestamo(QrData datosqr) async{
-  await QrControlador().insertarDatosPrestamo(datosqr).then((Success) => print(Success));
-}
+  int devolverPedir = 0;
 
   Future getDatosQR() async{
-    listaQr = await QrControlador().getDatosQr();
-    _streamController.sink.add(listaQr);
+    listaPrestamo = await QrControlador().getDatosPrestamo();
+    _streamController.sink.add(listaPrestamo);
   }
  
   @override
@@ -53,7 +49,9 @@ void descartar(){
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
+        appBar: AppBar(
+          
+        ),
         body: SafeArea(
         child: Column(
           children: [
@@ -64,13 +62,16 @@ void descartar(){
             
             if(snapshots.hasData){
               return ListView.builder(
-                itemCount: listaQr.length,
+                itemCount: listaPrestamo.length,
                 itemBuilder: ((context, index) {
                 
-                QrData qrdata = listaQr[index];
-                return ListTile(
-                  title: Text('Código del material: ${qrdata.idmaterial}'),
-                  subtitle: Text('Fecha del préstamo: ${qrdata.periodo_de_prestamo}'),
+                PrestamoData prestamoData = listaPrestamo[index];
+                return ListBody(
+                  children: [
+                    Text('Código del material: ${prestamoData.idrecurso}' ?? 'No se pidió ningún material todavía'),
+                    Text('Inicio del prestamo: ${prestamoData.inicio_prestamo}' ??'No se pidió ningún material todavía'),
+                    Text('Fin del prestamo: ${prestamoData.fin_prestamo}' ?? 'No se pidió ningún material todavía'),
+                  ],
                   
                 );
                 
@@ -86,17 +87,25 @@ void descartar(){
             ),
         ElevatedButton(
               onPressed: () {
+                setState(() {
+                  devolverPedir = 0;
+                });
+                
                 Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(),));
-                String qr = 'AAZ21969-07-20 20:18:04Z2023-06-07';
-                QrData datosqrinsert = QrData(
-                  idregistro: 2, 
-                  periodo_de_prestamo: qr.substring(4,24) , 
-                  fechas_extendidas: qr.substring(24), 
-                  idmaterial: qr.substring(0,4));
-                  insertarPrestamo(datosqrinsert);
               }, 
               
-              child: Text('Escanear QR'))
+              child: Text('Pedir Material')),
+
+        ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  devolverPedir = 1;
+                });
+                
+                Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(),));
+              }, 
+              
+              child: Text('Devolver Material'))
           ],
         ) 
        
