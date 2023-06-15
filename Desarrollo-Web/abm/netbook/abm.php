@@ -14,7 +14,7 @@ try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
-  $consultaSQL = "SELECT * FROM Returns WHERE status = 'Pending' LIMIT 1";
+  $consultaSQL = "SELECT pendiente.id, users.user_name, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
   $sentencia = $conexion->prepare($consultaSQL);
   $sentencia->execute();
 
@@ -123,13 +123,15 @@ if ($error) {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Notificación de Devolución</h5>
+        <h5 class="modal-title">Notificación de Peticion</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <p id="notificationMessage"><?php echo $notification['material_name']; ?></p>
+      <p id="notificationMessage"><?php echo $notification['user_name'];?></p>  
+      <p id="notificationMessage"><?php echo $notification['recurso_nombre'];?></p>
+      <p id="notificationMessage"><?php echo $notification['opciones']; ?></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>

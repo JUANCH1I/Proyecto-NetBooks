@@ -51,6 +51,7 @@ $(document).ready(function() {
       bottom: 0;
     }
   </style>
+  <link rel="stylesheet" href="style.css">
   <title>Presma</title>
 </head>
 
@@ -66,7 +67,9 @@ $(document).ready(function() {
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="/Desarrollo-Web/index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
+          <li><a href='../abmPersonas/abmPersonas.php' class="nav-link px-2 text-white">Usuarios</a></li>
           <li><a href="../netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
+          <li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Generar Qr</a></li>
           <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>

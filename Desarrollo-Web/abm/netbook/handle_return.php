@@ -19,9 +19,9 @@ $status = $_POST['status'];
 $id = $_POST['id'];
 
 if ($status == 'accepted') {
-    $sql = "UPDATE Returns SET status = 'Accepted' WHERE id = $id";
- } else if ($status == 'denied') {
-  $sql = "UPDATE Returns SET status = 'Denied' WHERE id = $id";
+  $sql = "UPDATE pendiente SET opcion = 'Accepted' WHERE id = $id";
+} else if ($status == 'denied') {
+  $sql = "UPDATE pendiente SET opcion = 'Denied' WHERE id = $id";
 }
 
 if ($conn->query($sql) === TRUE) {

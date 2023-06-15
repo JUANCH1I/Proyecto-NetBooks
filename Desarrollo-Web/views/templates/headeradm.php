@@ -39,6 +39,12 @@
     <a href="abm/netbook/abm.php" class="card">
       NetBooks
     </a>
+    <a href="abm/netbook/visual.php" class="card">
+      Visual
+    </a>
+    <a href="abm/netbook/qr.php" class="card">
+      Creacion Qr
+    </a>
   </div>
   <footer class="bg-light text-center text-lg-start">
     <!-- Copyright -->

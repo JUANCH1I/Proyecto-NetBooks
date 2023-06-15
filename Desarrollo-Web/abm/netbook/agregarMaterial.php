@@ -41,6 +41,9 @@ $conexion = conexion();
 $statement = $conexion->prepare("SELECT * FROM tipo_recurso");
 $statement->execute();
 $datos = $statement->fetchAll();
+$statement2 = $conexion->prepare("SELECT * FROM estado");
+$statement2->execute();
+$datosestado = $statement2->fetchAll();
 ?>
 
 <?php include '../template/header.php'; ?>
@@ -76,9 +79,14 @@ if (isset($resultado)) {
           <input type="text" name="recurso_nombre" id="recurso_nombre" class="form-control">
         </div>
         <div class="form-group">
-          <label for="recurso_estado">Estado del recurso</label>
-          <input type="text" name="recurso_estado" id="recurso_estado" class="form-control">
-        </div>
+          <label for="recurso_estado">Estado</label>
+          <select name="recurso_estado" id="recurso_estado" class="input">
+          <option value="" disabled hidden selected >Estado</option>
+            <?php foreach ($datosestado as $dato) : ?>
+              <option value="<?= $dato['idEstado'] ?>" class="input"><?= $dato['descripcion_estado'] ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div><br>
         <div class="form-group">
           <label for="recurso_tipo">Material</label>
           <select name="recurso_tipo" id="recurso_tipo" class="input">
