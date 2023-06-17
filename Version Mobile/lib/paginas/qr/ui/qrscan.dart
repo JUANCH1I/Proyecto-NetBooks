@@ -1,9 +1,9 @@
 import 'dart:io';
-
-import 'package:Presma/paginas/qr/qrControlador.dart';
+import 'package:Presma/paginas/qr/controlador/qrControlador.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
+import 'package:Presma/paginas/qr/modelo/qrdata.dart';
 
 
 
@@ -20,12 +20,22 @@ class QrScanState extends State<QrScan>{
    late MobileScannerController controller = MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
   Barcode? barcode;
   BarcodeCapture? capture;
-
   Future<void> onDetect(BarcodeCapture barcode) async {
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
+    String? datosqr = barcode.barcodes.first.displayValue;
+    QrData qr = new QrData(recurso_id: datosqr);
+    switch (HomeState().devolverPedir){
+      case 0:
+      QrControlador().pedirMaterial(qr);
+      break;
+      case 1:
+      QrControlador().devolverMaterial(qr);
+    }
+   
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+    
   }
 
   MobileScannerArguments? arguments;

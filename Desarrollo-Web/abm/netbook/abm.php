@@ -14,7 +14,7 @@ try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
-  $consultaSQL = "SELECT pendiente.id, users.user_name, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
+  $consultaSQL = "SELECT pendiente.id, users.user_name, pendiente.idMaterial, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
   $sentencia = $conexion->prepare($consultaSQL);
   $sentencia->execute();
 
@@ -37,7 +37,10 @@ try {
 } catch (PDOException $error) {
   $error = $error->getMessage();
 }
-
+$conexion = conexion();
+$statement = $conexion->prepare("SELECT id, DATE_FORMAT(horario, '%H:%i') AS horario FROM horario");
+$statement->execute();
+$datos = $statement->fetchAll();
 $titulo = isset($_POST['apellido']) ? 'Lista de prestamos (' . $_POST['apellido'] . ')' : 'Lista de alumnos';
 ?>
 
@@ -129,9 +132,18 @@ if ($error) {
         </button>
       </div>
       <div class="modal-body">
-      <p id="notificationMessage"><?php echo $notification['user_name'];?></p>  
-      <p id="notificationMessage"><?php echo $notification['recurso_nombre'];?></p>
-      <p id="notificationMessage"><?php echo $notification['opciones']; ?></p>
+      <p id="notificationMessage">Alumno: <?php echo $notification['user_name'];?></p> 
+      <p id="notificationMessage">Material: <?php $notification['idMaterial'];?> <?php echo $notification['recurso_nombre'];?></p>
+      <p id="notificationMessage">Tarea: <?php echo $notification['opciones']; ?></p>
+      <?php $notification['hora'];?>
+      <div class="form-group">
+      <label for="horario">Horario</label>
+          <select name="horario" id="horario" class="input">
+          <option value="" disabled hidden selected >Elegir un horario</option>
+            <?php foreach ($datos as $dato) : ?>
+              <option value="<?= $dato['id'] ?>" class="input"><?= $dato['horario'] ?></option>
+            <?php endforeach; ?>
+          </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>

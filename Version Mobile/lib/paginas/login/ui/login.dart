@@ -2,6 +2,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:Presma/paginas/login/controlador/loginControlador.dart';
+import 'package:Presma/paginas/login/modelo/loginModelo.dart';
 import 'package:flutter/material.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
 import 'package:http/http.dart' as http;
@@ -15,12 +17,20 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login>{
-    final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _globalKey = new GlobalKey();
 
-   TextEditingController user= new TextEditingController();
-TextEditingController pass= new TextEditingController();
+  TextEditingController user= new TextEditingController();
+  TextEditingController pass= new TextEditingController();
+  loginRequestModelo requestModelo = new loginRequestModelo();
+  bool esconderContrasena = true;
+  bool llamadaAPI = false;
 
+  @override
 
+  void initState(){
+    super.initState();
+    requestModelo;
+  }
 
     @override
    Widget build(BuildContext context) {
@@ -39,12 +49,15 @@ TextEditingController pass= new TextEditingController();
           ),
           SizedBox(height: 50),
           Form(
-            key: _formKey,
+            key: _globalKey,
             child: Column(
               children: <Widget>[
               Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-              child: TextField(
+              child: TextFormField(
+                onSaved: (input) => requestModelo.user_name = input,
+                keyboardType: TextInputType.emailAddress,
+              validator: (input) => /*input!= null && !input.contains("@alu.tecnica29de6.edu.ar") ||*/ input!= null && !input.contains("@tecnica29de6.edu.ar") ? "Dominio incorrecto" : null,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Mail',
@@ -54,17 +67,41 @@ TextEditingController pass= new TextEditingController();
               SizedBox(height: 10),
               Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-              child: TextField(
+              child: TextFormField(
+              onSaved: (input) => requestModelo.user_password = input,
+              validator: (input) => input != null ? null:"Ingrese una contraseña",
+              obscureText: esconderContrasena,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Contraseña',
-                icon: Icon(Icons.lock)))
+                icon: Icon(Icons.lock),
+                suffixIcon: IconButton(icon: esconderContrasena? Icon(Icons.visibility_off): Icon(Icons.visibility),
+                                      onPressed: () {
+                                        setState(() {
+                                          esconderContrasena = !esconderContrasena;
+                                        });
+                                        
+                                      },))
+                )
               ),
               SizedBox(height: 15,),
               ElevatedButton(
                 onPressed: () {
-                  //login();
-                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+                  if(validar()){
+                    loginControlador controlador = new loginControlador();
+                    var resultado = controlador.login(requestModelo);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+                    if(resultado == '1') {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+                    }
+                    else{
+                       SnackBar(content: Text('Usuario o Contraseña incorrectos'),);
+                    }
+                    
+                  }
+
+                  
+                  
                 },
                                     
                 child: const Text('Iniciar Sesión')),
@@ -80,25 +117,8 @@ TextEditingController pass= new TextEditingController();
             child: Text('¿Olvidaste la contraseña?',style: TextStyle(decoration:TextDecoration.underline),),
 
           ),
-          SizedBox(height: 20),
-          Center(
-            child: Text('O iniciar sesión con:')),
-         
           
-         
-           SizedBox(
-            height: 60,
-            
-             child: IconButton(
-              onPressed: () { 
-              },
-              icon: Image(
-                image:AssetImage('assets/google.png'),
-                height: 60,
-                ),
-              iconSize: 10,
-             ),
-           ),
+          
          
           
         ],
@@ -106,4 +126,14 @@ TextEditingController pass= new TextEditingController();
       ),
     );
   }
+
+  bool validar(){
+    final form = _globalKey.currentState;
+    if(form != null && form.validate()){
+      form.save();
+      return true;
+    }
+    return false;
   }
+  }
+

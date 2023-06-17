@@ -30,7 +30,12 @@ $(document).ready(function() {
       type: 'POST',
       data: {
         status: status,
-        id: '<?php echo $notification['id']; ?>'
+        id: '<?php echo $notification['id']; ?>',
+        alumno: '<?php echo $notification['user_name']; ?>',
+        material: '<?php $notification['idMaterial']; ?>',
+        opcion: '<?php echo $notification['opciones']; ?>',
+        hora: '<?php $notification['hora']; ?>'
+
       },
       success: function(response) {
         $('#notificationMessage').text(response);
