@@ -10,44 +10,41 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
   <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
-  <?php if(!empty($notification)) { ?>
-    $('#returnNotificationModal').modal('show');
-  <?php } ?>
+      <?php if (!empty($notification)) { ?>
+        $('#returnNotificationModal').modal('show');
+      <?php } ?>
 
-  $('#acceptReturn').click(function() {
-    handleReturn('accepted');
-  });
+      $('#acceptReturn').click(function() {
+        handleReturn('accepted');
+      });
 
-  $('#denyReturn').click(function() {
-    handleReturn('denied');
-  });
-  
-  function handleReturn(status) {
-    $.ajax({
-      url: 'handle_return.php',
-      type: 'POST',
-      data: {
-        status: status,
-        id: '<?php echo $notification['id']; ?>',
-        alumno: '<?php echo $notification['user_name']; ?>',
-        material: '<?php $notification['idMaterial']; ?>',
-        opcion: '<?php echo $notification['opciones']; ?>',
-        hora: '<?php $notification['hora']; ?>'
+      $('#denyReturn').click(function() {
+        handleReturn('denied');
+      });
 
-      },
-      success: function(response) {
-        $('#notificationMessage').text(response);
-        $('#acceptReturn, #denyReturn').hide();
-      },
-      error: function(error) {
-        alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
+      function handleReturn(status) {
+        $.ajax({
+          url: 'handle_return.php',
+          type: 'POST',
+          data: {
+            status: status,
+            id: '<?php echo $notification['id']; ?>',
+            alumno: '<?php echo $notification['user_id']; ?>',
+            material: '<?php echo $notification['idMaterial']; ?>',
+            opcion: '<?php echo $notification['opciones']; ?>',
+            hora_inicio: $('#hora_inicio').val(), // nuevo campo
+            hora_final: $('#horario').val() // nuevo campo
+          },
+          error: function(error) {
+            alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
+          }
+        });
       }
     });
-  }
-});
-</script>
+  </script>
+
 
   <style>
     footer {

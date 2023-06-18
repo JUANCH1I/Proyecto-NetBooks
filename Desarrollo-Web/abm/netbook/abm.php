@@ -14,7 +14,7 @@ try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
-  $consultaSQL = "SELECT pendiente.id, users.user_name, pendiente.idMaterial, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
+  $consultaSQL = "SELECT pendiente.id, users.user_id, users.user_name, pendiente.idMaterial, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, pendiente.hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
   $sentencia = $conexion->prepare($consultaSQL);
   $sentencia->execute();
 
@@ -125,33 +125,41 @@ if ($error) {
 <div class="modal" tabindex="-1" role="dialog" id="returnNotificationModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Notificación de Peticion</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <p id="notificationMessage">Alumno: <?php echo $notification['user_name'];?></p> 
-      <p id="notificationMessage">Material: <?php $notification['idMaterial'];?> <?php echo $notification['recurso_nombre'];?></p>
-      <p id="notificationMessage">Tarea: <?php echo $notification['opciones']; ?></p>
-      <?php $notification['hora'];?>
-      <div class="form-group">
-      <label for="horario">Horario</label>
-          <select name="horario" id="horario" class="input">
-          <option value="" disabled hidden selected >Elegir un horario</option>
-            <?php foreach ($datos as $dato) : ?>
-              <option value="<?= $dato['id'] ?>" class="input"><?= $dato['horario'] ?></option>
-            <?php endforeach; ?>
-          </select>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>
-        <button type="button" class="btn btn-danger" id="denyReturn">Rechazar</button>
-      </div>
+      <form action="handle_return.php" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title">Notificación de Peticion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p id="notificationMessage">Alumno: <?php echo $notification['user_id']; ?> <?php echo $notification['user_name']; ?></p> 
+          <p id="notificationMessage">Material: <?php echo $notification['idMaterial']; ?> <?php echo $notification['recurso_nombre']; ?></p>
+          <p id="notificationMessage">Tarea: <?php echo $notification['opciones']; ?></p>
+          <input type="hidden" id="hora_inicio" name="hora_inicio" value="<?php echo $notification['hora']; ?>">
+          <div class="form-group">
+            <label for="horario">Horario</label>
+            <select name="horario" id="horario" class="input">
+              <option value="" disabled hidden selected >Elegir un horario</option>
+              <?php foreach ($datos as $dato) : ?>
+                <option value="<?= $dato['id']; ?>" class="input"><?= $dato['horario'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>
+          <button type="button" class="btn btn-danger" id="denyReturn">Rechazar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
+
+
 
 
 
