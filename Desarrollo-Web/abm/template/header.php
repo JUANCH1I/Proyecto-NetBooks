@@ -30,17 +30,43 @@
           type: 'POST',
           data: {
             status: status,
-            id: '<?php echo $notification['id']; ?>',
-            alumno: '<?php echo $notification['user_id']; ?>',
-            material: '<?php echo $notification['idMaterial']; ?>',
-            opcion: '<?php echo $notification['opciones']; ?>',
-            hora_inicio: $('#hora_inicio').val(), // nuevo campo
-            hora_final: $('#horario').val() // nuevo campo
+            id: '<?php echo $notification['idregistro']; ?>',
+            hora: $('#horario').val() // nuevo campo
           },
+          success: function(response) {
+        $('#notificationMessage').text(response);
+        $('#acceptReturn, #denyReturn').hide();
+      },
           error: function(error) {
             alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
           }
         });
+      }
+      const source = new EventSource('actualizar.php');
+
+      source.onmessage = function(event) {
+        const alumnos = JSON.parse(event.data);
+        let html = '';
+        alumnos.forEach(alumno => {
+          html += generarFilaDeTabla(alumno);
+        });
+        document.getElementById('cuerpoDeTabla').innerHTML = html;
+      };
+
+      function generarFilaDeTabla(alumno) {
+        return `
+          <tr>
+            <td>${alumno.idregistro}</td>
+            <td>${alumno.user_name}</td>
+            <td>${alumno.inicio_prestamo}</td>
+            <td>${alumno.fin_prestamo}</td>
+            <td>${alumno.fechas_extendidas}</td>
+            <td>${alumno.recurso_nombre}</td>
+            <td>
+              <a href='sancion.php?id=${alumno.idregistro}'>🗑️Borrar</a>
+            </td>
+          </tr>
+        `;
       }
     });
   </script>
