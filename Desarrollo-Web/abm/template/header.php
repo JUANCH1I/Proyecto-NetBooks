@@ -70,6 +70,7 @@
       }
     });
   </script>
+  <script src="ajaxVisual.js"></script>
 
 
   <style>
