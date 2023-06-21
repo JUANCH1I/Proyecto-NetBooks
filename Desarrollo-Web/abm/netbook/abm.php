@@ -49,7 +49,7 @@ $titulo = isset($_POST['apellido']) ? 'Lista de prestamos (' . $_POST['apellido'
 
 <?php
 if ($error) {
-  ?>
+?>
   <div class="container mt-2">
     <div class="row">
       <div class="col-md-12">
@@ -59,7 +59,7 @@ if ($error) {
       </div>
     </div>
   </div>
-  <?php
+<?php
 }
 ?>
 
@@ -103,7 +103,7 @@ if ($error) {
           <?php
           if ($alumnos && $sentencia->rowCount() > 0) {
             foreach ($alumnos as $fila) {
-              ?>
+          ?>
               <tr>
                 <td><?php echo escapar($fila["idregistro"]); ?></td>
                 <td><?php echo escapar($fila["user_name"]); ?></td>
@@ -113,7 +113,7 @@ if ($error) {
                 <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
                 <td><a href="<?= 'sancion.php?id=' . escapar($fila["idregistro"]) ?>">🗑️Borrar</a></td>
               </tr>
-              <?php
+          <?php
             }
           }
           ?>
@@ -125,41 +125,41 @@ if ($error) {
 <div class="modal" tabindex="-1" role="dialog" id="returnNotificationModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Notificación de Peticion</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Notificación de Peticion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
-        <div class="modal-body">
-          <p id="notificationMessage">Alumno:
-            <?php echo $notification['user_name']; ?>
-          </p>
-          <p id="notificationMessage">Material:
-            <?php echo $notification['recurso_nombre']; ?>
-          </p>
-          <p id="notificationMessage">Tarea:
-            <?php echo $notification['opcion']; ?>
-          </p>
-          <p id="notificationMessage">Horario inicio:
-            <?php echo $notification['inicio_prestamo']; ?>
-          </p>
-          <div class="form-group">
-            <label for="horario">Horario</label>
-            <select name="horario" id="horario" class="input">
-              <option value="" disabled hidden selected>Elegir un horario</option>
-              <?php foreach ($datos as $dato): ?>
-                <option value="<?= $dato['id']; ?>" class="input"><?= $dato['horario'] ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
+      <div class="modal-body">
+        <p id="notificationMessageUser">Alumno:
+          <?php echo $notification['user_name']; ?>
+        </p>
+        <p id="notificationMessageResource">Material:
+          <?php echo $notification['recurso_nombre']; ?>
+        </p>
+        <p id="notificationMessageTask">Tarea:
+          <?php echo $notification['opcion']; ?>
+        </p>
+        <p id="notificationMessageStart">Horario inicio:
+          <?php echo $notification['inicio_prestamo']; ?>
+        </p>
+        <div class="form-group">
+          <label for="horario">Horario</label>
+          <select name="horario" id="horario" class="input">
+            <option value="" disabled hidden selected>Elegir un horario</option>
+            <?php foreach ($datos as $dato) : ?>
+              <option value="<?= $dato['id']; ?>" class="input"><?= $dato['horario'] ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
+      </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>
-          <button type="button" class="btn btn-danger" id="denyReturn">Rechazar</button>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>
+        <button type="button" class="btn btn-danger" id="denyReturn">Rechazar</button>
+      </div>
     </div>
   </div>
 </div>
