@@ -1,30 +1,28 @@
-
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Presma/main.dart';
-import 'package:Presma/paginas/login/controlador/loginControlador.dart';
-import 'package:Presma/paginas/login/modelo/loginModelo.dart';
-import 'package:Presma/paginas/registro/ui/registro.dart';
+//import 'package:Presma/paginas/Registro/controlador/RegistroControlador.dart';
+//import 'package:Presma/paginas/Registro/modelo/RegistroModelo.dart';
+import 'package:Presma/paginas/Registro/controlador/RegistroControlador.dart';
+import 'package:Presma/paginas/Registro/modelo/RegistroModelo.dart';
 import 'package:flutter/material.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Registro extends StatefulWidget {
+  const Registro({super.key});
 
   @override
-  State<Login> createState() => LoginState();
+  State<Registro> createState() => RegistroState();
 }
 
-class LoginState extends State<Login>{
+class RegistroState extends State<Registro>{
   GlobalKey<FormState> _globalKey = new GlobalKey();
-  List<loginRespuestaModelo> listaRespuesta = [];
+
   TextEditingController user= new TextEditingController();
   TextEditingController pass= new TextEditingController();
-  loginRequestModelo requestModelo = new loginRequestModelo();
+  registroRequestModelo requestModelo = new registroRequestModelo();
   bool esconderContrasena = true;
   bool llamadaAPI = false;
 
@@ -46,7 +44,7 @@ class LoginState extends State<Login>{
           Center(
             child: SafeArea(
               child: 
-              Text('Iniciar Sesión', style: TextStyle(
+              Text('Registrarse', style: TextStyle(
                 fontSize: 40,fontWeight: FontWeight.bold))
             )
           ),
@@ -58,21 +56,35 @@ class LoginState extends State<Login>{
               Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               child: TextFormField(
-                onSaved: (input) => requestModelo.user_email = input,
-                keyboardType: TextInputType.emailAddress,
-              validator: (input) => ((input != null && !input.contains("@alu.tecnica29de6.edu.ar")) || (input!= null && !input.contains("@tecnica29de6.edu.ar"))) ? null : "Dominio incorrecto",
+                onSaved: (input) => requestModelo.user_name = input,
+                keyboardType: TextInputType.text,
+      
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
-                hintText: 'Mail',
+                hintText: 'Usuario',
                 icon: Icon(Icons.person))
               )
               ),
               SizedBox(height: 10),
+              
+              Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+              child: TextFormField(
+                onSaved: (input) => requestModelo.user_email = input,
+                keyboardType: TextInputType.emailAddress,
+              validator: (input) => (input!= null && !input.contains("@alu.tecnica29de6.edu.ar"))  || (input!= null && !input.contains("@tecnica29de6.edu.ar")) ? null : "Dominio incorrecto",
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                hintText: 'Mail',
+                icon: Icon(Icons.email))
+              )
+              ),
+              SizedBox(height: 10,),
               Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               child: TextFormField(
               onSaved: (input) => requestModelo.user_password = input,
-              validator: (input) => input == null ? "Ingrese una contraseña":null,
+              validator: (input) => input != null ? null:"Ingrese una contraseña",
               obscureText: esconderContrasena,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
@@ -87,20 +99,15 @@ class LoginState extends State<Login>{
                                       },))
                 )
               ),
-              SizedBox(height: 15,),
+              
+              SizedBox(height: 15),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: () async{
                   if(validar()){
-                    loginControlador controlador = new loginControlador();
-                    listaRespuesta = await controlador.loginRespuesta(requestModelo);
-                    if(listaRespuesta[0].user_login_status == '1') {
-                      Provider.of<MyAppState>(context, listen: false).cambiarLoginStatus();
-                      Provider.of<MyAppState>(context, listen: false).setIdUsuario(listaRespuesta[0].user_id);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
-                    }
-                    else{
-                       SnackBar(content: Text('Usuario o Contraseña incorrectos'),);
-                    }
+                    RegistroControlador controlador = RegistroControlador();
+                    String resultado = await controlador.registro(requestModelo);
+
+                    SnackBar(content: Text(resultado),);
                     
                   }
 
@@ -108,7 +115,7 @@ class LoginState extends State<Login>{
                   
                 },
                                     
-                child: const Text('Iniciar Sesión')),
+                child: const Text('Registrarse')),
           ],
           )
           ),
@@ -122,14 +129,7 @@ class LoginState extends State<Login>{
 
           ),
           
-          SizedBox(height: 15),
-          TextButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Registro(),));
-            },
-            child: Text('¿No tenes un usuario? Registrate',style: TextStyle(decoration:TextDecoration.underline),),
-
-          ),
+          
          
           
         ],

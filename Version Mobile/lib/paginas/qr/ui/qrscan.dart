@@ -1,39 +1,58 @@
 import 'dart:io';
+import 'package:Presma/main.dart';
 import 'package:Presma/paginas/qr/controlador/qrControlador.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
 import 'package:Presma/paginas/qr/modelo/qrdata.dart';
+import 'package:provider/provider.dart';
 
 
 
 class QrScan extends StatefulWidget{
+  final int devolverPedir;
+  QrScan({required this.devolverPedir});
   @override
   State<StatefulWidget> createState() {
     return QrScanState();
   }
 
 }
-
+ MyAppState notifier = MyAppState();
 class QrScanState extends State<QrScan>{
-  
-   late MobileScannerController controller = MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
+
+  late MobileScannerController controller = MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
   Barcode? barcode;
   BarcodeCapture? capture;
+  @override
+  void initState() {
+   
+    super.initState();
+     MyAppState().addListener(() => mounted ? setState(() {}) : null);
+    // 2
+    
+  }
+
+ 
+
   Future<void> onDetect(BarcodeCapture barcode) async {
+    
+    
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
     String? datosqr = barcode.barcodes.first.displayValue;
-    QrData qr = new QrData(recurso_id: datosqr);
-    switch (HomeState().devolverPedir){
+    QrData qr = QrData(recurso_id: datosqr, idusuario: MyAppState().idusuario );
+    switch (widget.devolverPedir){
       case 0:
       QrControlador().pedirMaterial(qr);
       break;
       case 1:
       QrControlador().devolverMaterial(qr);
+      break;
     }
    
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => Home()));
+
     
     
   }
