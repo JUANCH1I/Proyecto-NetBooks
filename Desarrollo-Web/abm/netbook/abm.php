@@ -14,7 +14,7 @@ try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
-  $consultaSQL = "SELECT pendiente.id, users.user_name, recurso.recurso_nombre, CASE when pendiente.opcion=0 then 'Regresar' else 'Retirar' end as opciones, hora FROM pendiente inner join recurso on recurso.recurso_id = pendiente.idMaterial inner join users on pendiente.idAlumno = users.user_id  where pendiente.opcion = 'Pending' LIMIT 1";
+  $consultaSQL = "SELECT registros.idregistro, users.user_id, users.user_name, registros.idrecurso, recurso.recurso_nombre, registros.inicio_prestamo, registros.opcion FROM registros inner join recurso on recurso.recurso_id = registros.idrecurso inner join users on registros.idusuario = users.user_id  where registros.opcion = 'Pending' LIMIT 1";
   $sentencia = $conexion->prepare($consultaSQL);
   $sentencia->execute();
 
@@ -27,7 +27,7 @@ try {
   if (isset($_POST['apellido'])) {
     $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%H:%i') AS inicio_prestamo, DATE_FORMAT(registros.fin_prestamo, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso;";
   } else {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%H:%i') AS inicio_prestamo, DATE_FORMAT(registros.fin_prestamo, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso;";
+    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending';";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -37,7 +37,10 @@ try {
 } catch (PDOException $error) {
   $error = $error->getMessage();
 }
-
+$conexion = conexion();
+$statement = $conexion->prepare("SELECT id, DATE_FORMAT(horario, '%H:%i') AS horario FROM horario");
+$statement->execute();
+$datos = $statement->fetchAll();
 $titulo = isset($_POST['apellido']) ? 'Lista de prestamos (' . $_POST['apellido'] . ')' : 'Lista de alumnos';
 ?>
 
@@ -82,7 +85,9 @@ if ($error) {
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h2 class="mt-3"><?= $titulo ?></h2>
+      <h2 class="mt-3">
+        <?= $titulo ?>
+      </h2>
       <table class="table">
         <thead>
           <tr>
@@ -94,7 +99,7 @@ if ($error) {
             <th>Material retirado</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="cuerpoDeTabla">
           <?php
           if ($alumnos && $sentencia->rowCount() > 0) {
             foreach ($alumnos as $fila) {
@@ -106,9 +111,7 @@ if ($error) {
                 <td><?php echo escapar($fila["fin_prestamo"]); ?></td>
                 <td><?php echo escapar($fila["fechas_extendidas"]); ?></td>
                 <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
-                <td>
-                  <a href="<?= 'sancion.php?id=' . escapar($fila["idregistro"]) ?>">🗑️Borrar</a>
-                </td>
+                <td><a href="<?= 'sancion.php?id=' . escapar($fila["idregistro"]) ?>">🗑️Borrar</a></td>
               </tr>
           <?php
             }
@@ -128,11 +131,31 @@ if ($error) {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
       <div class="modal-body">
-      <p id="notificationMessage"><?php echo $notification['user_name'];?></p>  
-      <p id="notificationMessage"><?php echo $notification['recurso_nombre'];?></p>
-      <p id="notificationMessage"><?php echo $notification['opciones']; ?></p>
+        <p id="notificationMessageUser">Alumno:
+          <?php echo $notification['user_name']; ?>
+        </p>
+        <p id="notificationMessageResource">Material:
+          <?php echo $notification['recurso_nombre']; ?>
+        </p>
+        <p id="notificationMessageTask">Tarea:
+          <?php echo $notification['opcion']; ?>
+        </p>
+        <p id="notificationMessageStart">Horario inicio:
+          <?php echo $notification['inicio_prestamo']; ?>
+        </p>
+        <div class="form-group">
+          <label for="horario">Horario</label>
+          <select name="horario" id="horario" class="input">
+            <option value="" disabled hidden selected>Elegir un horario</option>
+            <?php foreach ($datos as $dato) : ?>
+              <option value="<?= $dato['id']; ?>" class="input"><?= $dato['horario'] ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="acceptReturn">Aceptar</button>
         <button type="button" class="btn btn-danger" id="denyReturn">Rechazar</button>
@@ -140,6 +163,9 @@ if ($error) {
     </div>
   </div>
 </div>
+
+
+
 
 
 

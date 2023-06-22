@@ -47,7 +47,7 @@ $stmt = $pdo->query('SELECT * FROM recurso WHERE recurso_tipo = 1 ORDER BY recur
     </div>
 </div>
 <div style='display: flex; justify-content:center;'>
-    <div style='display: flex; flex-wrap: wrap; width: 500px;'>
+    <div id="netbookContainer" style='display: flex; flex-wrap: wrap; width: 500px;'>
         <?php
         while ($row = $stmt->fetch()) {
             $color = $row['recurso_estado'] == 1 ? '#d4edda' : ($row['recurso_estado'] == 2 ? '#f8d7da' : '#ffeeba');

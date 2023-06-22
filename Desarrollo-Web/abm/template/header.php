@@ -10,39 +10,96 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
   <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
-  <?php if(!empty($notification)) { ?>
-    $('#returnNotificationModal').modal('show');
-  <?php } ?>
+      <?php if (!empty($notification)) { ?>
+        $('#returnNotificationModal').modal('show');
+      <?php } ?>
 
-  $('#acceptReturn').click(function() {
-    handleReturn('accepted');
-  });
+      $('#acceptReturn').click(function() {
+        handleReturn('accepted');
+      });
 
-  $('#denyReturn').click(function() {
-    handleReturn('denied');
-  });
-  
-  function handleReturn(status) {
-    $.ajax({
-      url: 'handle_return.php',
-      type: 'POST',
-      data: {
-        status: status,
-        id: '<?php echo $notification['id']; ?>'
-      },
-      success: function(response) {
-        $('#notificationMessage').text(response);
-        $('#acceptReturn, #denyReturn').hide();
-      },
-      error: function(error) {
-        alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
+      $('#denyReturn').click(function() {
+        handleReturn('denied');
+      });
+      let isModalOpen = false; // <-- Declara la variable aquí
+
+      $('#returnNotificationModal').on('shown.bs.modal', function() {
+        isModalOpen = true; // <-- Marca el modal como abierto cuando se muestra
+      });
+
+      $('#returnNotificationModal').on('hidden.bs.modal', function() {
+        isModalOpen = false; // <-- Marca el modal como cerrado cuando se oculta
+      });
+
+
+      function handleReturn(status) {
+        $.ajax({
+          url: 'handle_return.php',
+          type: 'POST',
+          data: {
+            status: status,
+            id: '<?php echo $notification['idregistro']; ?>',
+            hora: $('#horario').val() // nuevo campo
+          },
+          success: function(response) {
+            $('#notificationMessage').text(response);
+            $('#acceptReturn, #denyReturn').hide();
+          },
+          error: function(error) {
+            alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
+          }
+        });
       }
+      const source = new EventSource('actualizar.php');
+
+      source.onmessage = function(event) {
+        const alumnos = JSON.parse(event.data);
+        let html = '';
+        alumnos.forEach(alumno => {
+          html += generarFilaDeTabla(alumno);
+        });
+        document.getElementById('cuerpoDeTabla').innerHTML = html;
+      };
+
+      function generarFilaDeTabla(alumno) {
+        return `
+          <tr>
+            <td>${alumno.idregistro}</td>
+            <td>${alumno.user_name}</td>
+            <td>${alumno.inicio_prestamo}</td>
+            <td>${alumno.fin_prestamo}</td>
+            <td>${alumno.fechas_extendidas}</td>
+            <td>${alumno.recurso_nombre}</td>
+            <td>
+              <a href='sancion.php?id=${alumno.idregistro}'>🗑️Borrar</a>
+            </td>
+          </tr>
+        `;
+      }
+      const sourceModal = new EventSource('actualizarModal.php');
+
+      sourceModal.onmessage = function(event) {
+        const notificacion = JSON.parse(event.data);
+
+        // Comprobar si el modal está abierto
+        if (!isModalOpen && notificacion) {
+          // Actualizar el contenido del modal
+          document.getElementById('notificationMessageUser').textContent = notificacion.user_name;
+          document.getElementById('notificationMessageResource').textContent = notificacion.recurso_nombre;
+          document.getElementById('notificationMessageTask').textContent = notificacion.opcion;
+          document.getElementById('notificationMessageStart').textContent = notificacion.inicio_prestamo;
+
+          // Abrir el modal
+          $('#returnNotificationModal').modal('show');
+        }
+      };
+
+
     });
-  }
-});
-</script>
+  </script>
+
 
   <style>
     footer {
