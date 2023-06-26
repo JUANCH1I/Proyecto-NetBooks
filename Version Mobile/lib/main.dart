@@ -33,6 +33,16 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var logueado = 0;
+  String idusuario = '11';
+
+  void cambiarLoginStatus(){
+    logueado = 1;
+    notifyListeners();
+  }
+  void setIdUsuario(nuevoID){
+    idusuario = nuevoID;
+    notifyListeners();
+  }
 }
 
 class Cargando extends StatefulWidget{
@@ -77,9 +87,9 @@ class CargandoState extends State<Cargando>{
   }
 
   Future<String> _login() async {
-    var logueado = 0;
+    MyAppState().addListener(() => mounted ? setState(() {}) : null);
     await Future.delayed(Duration(seconds: 3)).then((value) {
-      switch(logueado){
+      switch(MyAppState().logueado){
         case 0: 
           Navigator.pushReplacement(
         context,

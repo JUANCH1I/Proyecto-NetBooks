@@ -3,11 +3,14 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrData{
   String? recurso_id;
-  QrData({required this.recurso_id,});
+  String? idusuario;
+  QrData({required this.recurso_id,
+          required this.idusuario});
   
   Map<String,dynamic> toJson(){
     return{
-    'recurso_id': recurso_id,};
+    'recurso_id': recurso_id,
+    'idusuario': idusuario,};
     
   }
 }
