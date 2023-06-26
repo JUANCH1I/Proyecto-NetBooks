@@ -1,13 +1,15 @@
 $(document).ready(function() {
     $('.netbook').click(function() {
+        var id = $(this).data('recurso_id');
+        var nombre = $(this).data('recurso_nombre');
         var reservadoPor = $(this).data('reservado-por');
-        var estado = $(this).data('estado');
-        if (estado === 'mantenimiento') {
-            $('#modal-text').text('Esta netbook está en mantenimiento');
-        } else if (reservadoPor) {
-            $('#modal-text').text('Esta netbook fue reservada por ' + reservadoPor);
+        var estado = $(this).data('recurso_estado');
+        if (estado === 3) {
+            $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook está en mantenimiento');
+        } else if (estado === 2) {
+            $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook fue reservada por ' + reservadoPor);
         } else {
-            $('#modal-text').text('Esta netbook está libre');
+            $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook está libre');
         }
         $('#myModal').show();
     });

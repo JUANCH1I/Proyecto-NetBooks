@@ -23,11 +23,7 @@ if (isset($_POST['submit']) && !hash_equals($_SESSION['csrf'], $_POST['csrf'])) 
 $error = false;
 $config = include('../db.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['netbook_id'])) {
-    $stmt = $pdo->prepare('UPDATE netbooks SET estado = "reservado", reservado_por = ? WHERE id = ?');
-    $stmt->execute([$_POST['nombre'], $_POST['netbook_id']]);
-}
-$stmt = $pdo->query('SELECT * FROM recurso WHERE recurso_tipo = 1 ORDER BY recurso_id desc');
+$stmt = $pdo->query('SELECT recurso.*, registros.idusuario, users.user_name FROM recurso LEFT JOIN registros ON recurso.recurso_id = registros.idrecurso LEFT JOIN users ON registros.idusuario = users.user_id WHERE recurso.recurso_tipo = 1 ORDER BY recurso.recurso_id desc');
 ?>
 
 <?php include "../template/header.php"; ?>
@@ -51,7 +47,7 @@ $stmt = $pdo->query('SELECT * FROM recurso WHERE recurso_tipo = 1 ORDER BY recur
         <?php
         while ($row = $stmt->fetch()) {
             $color = $row['recurso_estado'] == 1 ? '#d4edda' : ($row['recurso_estado'] == 2 ? '#f8d7da' : '#ffeeba');
-            echo "<div class='netbook'  style='background-color: {$color}; width: 50px; height: 50px; margin: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center;'>";
+            echo "<div class='netbook' data-recurso_id='{$row['recurso_id']}' data-recurso_nombre='{$row['recurso_nombre']}' data-recurso_estado='{$row['recurso_estado']}' data-reservado-por='{$row['user_name']}' style='background-color: {$color}; width: 50px; height: 50px; margin: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center;'>";
             echo "<img src='netbook.png' alt='Netbook' style='width: 50%;'>";
             echo "</div>";
         }

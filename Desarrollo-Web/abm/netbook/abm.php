@@ -14,7 +14,7 @@ try {
   $dsn = 'mysql:host=' . $config['db']['host'] . ';dbname=' . $config['db']['name'];
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
-  $consultaSQL = "SELECT registros.idregistro, users.user_id, users.user_name, registros.idrecurso, recurso.recurso_nombre, registros.inicio_prestamo, registros.opcion FROM registros inner join recurso on recurso.recurso_id = registros.idrecurso inner join users on registros.idusuario = users.user_id  where registros.opcion = 'Pending' LIMIT 1";
+  $consultaSQL = "SELECT registros.idregistro, users.user_id, users.user_name, registros.idrecurso, recurso.recurso_nombre, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, registros.opcion FROM registros inner join recurso on recurso.recurso_id = registros.idrecurso inner join users on registros.idusuario = users.user_id  where registros.opcion = 'Pending' LIMIT 1";
   $sentencia = $conexion->prepare($consultaSQL);
   $sentencia->execute();
 
@@ -25,9 +25,9 @@ try {
   }
 
   if (isset($_POST['apellido'])) {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%H:%i') AS inicio_prestamo, DATE_FORMAT(registros.fin_prestamo, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso;";
+  $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 1 ORDER BY registros.idregistro desc;";
   } else {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending';";
+    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 1 ORDER BY registros.idregistro desc ;";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -69,6 +69,7 @@ if ($error) {
       <a href="/Desarrollo-Web/index.php" class="btn btn-primary mt-4">Volver al inicio</a>
       <a href="agregarMaterial.php" class="btn btn-primary mt-4">Agregar material</a>
       <a href="visual.php" class="btn btn-primary mt-4">Forma visual</a>
+      <a href="devuelto.php" class="btn btn-primary mt-4">Ver devueltos</a>
       <hr>
 
       <form method="post" class="form-inline">
@@ -107,7 +108,7 @@ if ($error) {
               <tr>
                 <td><?php echo escapar($fila["idregistro"]); ?></td>
                 <td><?php echo escapar($fila["user_name"]); ?></td>
-                <td><?php echo escapar($fila["inicio_prestamo"]); ?></td>
+                <td><?php echo escapar(($fila["inicio_prestamo"])); ?></td>
                 <td><?php echo escapar($fila["fin_prestamo"]); ?></td>
                 <td><?php echo escapar($fila["fechas_extendidas"]); ?></td>
                 <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
@@ -133,18 +134,9 @@ if ($error) {
       </div>
 
       <div class="modal-body">
-        <p id="notificationMessageUser">Alumno:
-          <?php echo $notification['user_name']; ?>
-        </p>
-        <p id="notificationMessageResource">Material:
-          <?php echo $notification['recurso_nombre']; ?>
-        </p>
-        <p id="notificationMessageTask">Tarea:
-          <?php echo $notification['opcion']; ?>
-        </p>
-        <p id="notificationMessageStart">Horario inicio:
-          <?php echo $notification['inicio_prestamo']; ?>
-        </p>
+        <p id="notificationMessageUser">Alumno: <?php echo $notification['user_name']; ?></p>
+        <p id="notificationMessageResource">Material: <?php echo $notification['recurso_nombre']; ?></p>
+        <p id="notificationMessageStart">Horario inicio: <?php echo $notification['inicio_prestamo']; ?></p>
         <div class="form-group">
           <label for="horario">Horario</label>
           <select name="horario" id="horario" class="input">
