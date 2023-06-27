@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
 import 'package:Presma/paginas/qr/modelo/qrdata.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -37,21 +38,26 @@ class QrScanState extends State<QrScan>{
 
   Future<void> onDetect(BarcodeCapture barcode) async {
     
-    
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
     String? datosqr = barcode.barcodes.first.displayValue;
-    QrData qr = QrData(recurso_id: datosqr, idusuario: MyAppState().idusuario );
+    QrData qr = QrData(recurso_id: datosqr, idusuario: prefs.getString('idusuario') );
     switch (widget.devolverPedir){
       case 0:
-      QrControlador().pedirMaterial(qr);
+      String resultado = await QrControlador().pedirMaterial(qr);
+      var snackBar = SnackBar(content: Text(resultado));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       break;
       case 1:
-      QrControlador().devolverMaterial(qr);
+      String resultado = await QrControlador().devolverMaterial(qr);
+      var snackBar = SnackBar(content: Text(resultado));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      
       break;
     }
    
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => Home()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
 
     
     

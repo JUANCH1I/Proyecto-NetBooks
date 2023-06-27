@@ -10,7 +10,7 @@ List<Usuario> usuarioFromJson(String jsonstring){
   );
 }
 Future<List<Usuario>> getDatosUsuario() async {
-    final response = await http.get(Uri.parse("http:/www.tecnica29de6.edu.ar/presma/getusuariodata.php"));
+    final response = await http.get(Uri.parse("https://gestion.tecnica29de6.edu.ar/presma/getusuariodata.php"));
     if (response.statusCode == 200){
       List<Usuario> datosUsuario = usuarioFromJson(response.body);
       return datosUsuario;

@@ -13,7 +13,7 @@ class loginControlador{
 
   Future<List<loginRespuestaModelo>> loginRespuesta(loginRequestModelo request)async{
     
-    final response = await http.post(Uri.parse('http://192.168.0.71/Presma/login.php'),
+    final response = await http.post(Uri.parse('https://gestion.tecnica29de6.edu.ar/presma/login.php'),
     body: request.toJson());
     if (response.statusCode == 200){
       

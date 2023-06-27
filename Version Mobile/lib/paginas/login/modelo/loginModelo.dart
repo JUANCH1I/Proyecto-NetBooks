@@ -15,10 +15,10 @@ class loginRequestModelo{
 
 class loginRespuestaModelo{
   String user_login_status;
-  String? user_id;
+  String user_id;
   String? error;
 
-  loginRespuestaModelo({required this.user_login_status, this.error, this.user_id});
+  loginRespuestaModelo({required this.user_login_status, this.error, required this.user_id});
 
    factory loginRespuestaModelo.fromJson(Map<String, dynamic> json){
     return loginRespuestaModelo(

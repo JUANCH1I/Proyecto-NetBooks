@@ -1,7 +1,7 @@
 
 class PrestamoData{
   int idregistro;
-  String recurso_id;
+  String? recurso_id;
   String inicio_prestamo;
   String? fechas_extendidas;
   String? fin_prestamo;
@@ -18,7 +18,7 @@ class PrestamoData{
       idregistro: json['idregistro'],
       inicio_prestamo: json['inicio_prestamo'],
       fechas_extendidas: json['fechas_extendidas'],
-      recurso_id: json['recurso_id'],
+      recurso_id: json['idrecurso'],
       fin_prestamo: json['fin_prestamo']);
   } 
 
