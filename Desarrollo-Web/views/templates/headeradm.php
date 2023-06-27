@@ -25,7 +25,7 @@
           <li><a href='/Desarrollo-Web/index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href='abm/abmPersonas/abmPersonas.php' class="nav-link px-2 text-white">Usuarios</a></li>
           <li><a href='abm/netbook/visual.php' class="nav-link px-2 text-white">Registros</a></li>
-          <li><a href="netbook/abmSanciones.php" class="nav-link px-2 text-white">Sanciones</a></li>
+          <li><a href="abm/netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 

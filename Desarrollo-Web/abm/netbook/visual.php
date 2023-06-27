@@ -23,7 +23,31 @@ if (isset($_POST['submit']) && !hash_equals($_SESSION['csrf'], $_POST['csrf'])) 
 $error = false;
 $config = include('../db.php');
 
-$stmt = $pdo->query('SELECT recurso.*, registros.idusuario, users.user_name FROM recurso LEFT JOIN registros ON recurso.recurso_id = registros.idrecurso LEFT JOIN users ON registros.idusuario = users.user_id WHERE recurso.recurso_tipo = 1 ORDER BY recurso.recurso_id desc');
+$stmt = $pdo->query("
+    SELECT 
+        recurso.*, 
+        IF(
+            (SELECT registros.opcion 
+             FROM registros 
+             WHERE registros.idrecurso = recurso.recurso_id 
+             ORDER BY inicio_prestamo DESC LIMIT 1) = 'Accepted' 
+            AND 
+            (SELECT registros.devuelto 
+             FROM registros 
+             WHERE registros.idrecurso = recurso.recurso_id 
+             ORDER BY inicio_prestamo DESC LIMIT 1) = 0, 
+            'Reservado', 
+            'Libre'
+        ) as recurso_estado, 
+        (SELECT users.user_name 
+         FROM registros 
+         JOIN users ON registros.idusuario = users.user_id 
+         WHERE registros.idrecurso = recurso.recurso_id 
+         ORDER BY inicio_prestamo DESC LIMIT 1) as user_name 
+    FROM recurso 
+    WHERE recurso.recurso_tipo = 1
+    ORDER BY recurso.recurso_id
+");
 ?>
 
 <?php include "../template/header.php"; ?>
@@ -46,9 +70,10 @@ $stmt = $pdo->query('SELECT recurso.*, registros.idusuario, users.user_name FROM
     <div id="netbookContainer" style='display: flex; flex-wrap: wrap; width: 500px;'>
         <?php
         while ($row = $stmt->fetch()) {
-            $color = $row['recurso_estado'] == 1 ? '#d4edda' : ($row['recurso_estado'] == 2 ? '#f8d7da' : '#ffeeba');
+            $color = $row['recurso_estado'] == 'Libre' ? '#d4edda' : '#f8d7da';
             echo "<div class='netbook' data-recurso_id='{$row['recurso_id']}' data-recurso_nombre='{$row['recurso_nombre']}' data-recurso_estado='{$row['recurso_estado']}' data-reservado-por='{$row['user_name']}' style='background-color: {$color}; width: 50px; height: 50px; margin: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center;'>";
             echo "<img src='netbook.png' alt='Netbook' style='width: 50%;'>";
+            echo "<p>{$row['recurso_nombre']}</p>";
             echo "</div>";
         }
         ?>

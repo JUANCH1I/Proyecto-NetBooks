@@ -13,8 +13,6 @@ if ($conn->connect_error) {
 }
 $status = $_POST['status']; 
 $id = $_POST['id'];
-$horario_id = $_POST['hora'];
-
 
 $sql = "SELECT * FROM registros WHERE idregistro = ?";
 $stmt = $conn->prepare($sql);
@@ -24,11 +22,11 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
   if ($status == 'accepted') {
-      $sql = "UPDATE registros SET opcion = 'Accepted', fin_prestamo = ? WHERE idregistro = ?";
+      $sql = "UPDATE registros SET devuelto = 'Accepted' WHERE idregistro = ?";
       $stmt = $conn->prepare($sql);
-      $stmt->bind_param("ii", $horario_id, $id);
+      $stmt->bind_param("i", $id);
   } else if ($status == 'denied') {
-      $sql = "UPDATE pendiente SET opcion = 'Denied' WHERE id = ?";
+      $sql = "UPDATE pendiente SET devuelto = 'Denied' WHERE id = ?";
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("i", $id);
   }

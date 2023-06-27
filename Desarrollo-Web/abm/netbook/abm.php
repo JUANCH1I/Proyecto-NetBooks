@@ -1,3 +1,4 @@
+-- Active: 1683434845626@@190.228.29.62@3306@bdwebet29
 <?php
 include '../funciones.php';
 
@@ -24,10 +25,20 @@ try {
     $notification = $sentencia->fetch(PDO::FETCH_ASSOC);
   }
 
+  $consultaSQL = "SELECT registros.idregistro, users.user_id, users.user_name, registros.idrecurso, recurso.recurso_nombre, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS horario, registros.opcion FROM registros inner join recurso on recurso.recurso_id = registros.idrecurso inner join users on registros.idusuario = users.user_id inner join horario on horario.id = registros.fin_prestamo  where registros.devuelto = 'Pending' LIMIT 1";
+  $sentencia = $conexion->prepare($consultaSQL);
+  $sentencia->execute();
+
+  $notificationDevolucion = null;
+  if ($sentencia->rowCount() > 0) {
+    // Si hay una devolución pendiente, se almacenará en $notification
+    $notificationDevolucion = $sentencia->fetch(PDO::FETCH_ASSOC);
+  }
+
   if (isset($_POST['apellido'])) {
-  $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 1 ORDER BY registros.idregistro desc;";
+  $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 'Accepted' ORDER BY registros.idregistro desc;";
   } else {
-    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 1 ORDER BY registros.idregistro desc ;";
+    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 'Accepted' ORDER BY registros.idregistro desc ;";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -112,7 +123,6 @@ if ($error) {
                 <td><?php echo escapar($fila["fin_prestamo"]); ?></td>
                 <td><?php echo escapar($fila["fechas_extendidas"]); ?></td>
                 <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
-                <td><a href="<?= 'sancion.php?id=' . escapar($fila["idregistro"]) ?>">🗑️Borrar</a></td>
               </tr>
           <?php
             }
@@ -156,6 +166,30 @@ if ($error) {
   </div>
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="returnDevolucionModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Notificación de Devolucion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p id="devolucionMessageUser">Alumno: <?php echo $notificationDevolucion['user_name']; ?></p>
+        <p id="devolucionMessageResource">Material: <?php echo $notificationDevolucion['recurso_nombre']; ?></p>
+        <p id="devolucionMessageStart">Horario inicio: <?php echo $notificationDevolucion['inicio_prestamo']; ?></p>
+        <p id="devolucionMessageEnd">Horario final: <?php echo $notificationDevolucion['horario']; ?></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="acceptDevolucion">Aceptar</button>
+        <button type="button" class="btn btn-danger" id="denyDevolucion">Rechazar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
