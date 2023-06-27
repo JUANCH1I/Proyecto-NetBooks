@@ -1,7 +1,7 @@
 import 'package:Presma/main.dart';
 
 class Usuario{
-  String idusuario;
+  String? idusuario;
   String? user_name;
   String? user_email;
   int? idRol;

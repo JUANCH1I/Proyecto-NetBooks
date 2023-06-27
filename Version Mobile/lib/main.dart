@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Presma/paginas/home/ui/home.dart';
 import 'package:Presma/paginas/login/ui/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,13 +31,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+String logueado = 'false';
+String idusuario = 'idusuario';
 class MyAppState extends ChangeNotifier {
-  var logueado = 0;
-  String idusuario = '11';
+  bool logueado = false;
+  late String idusuario;
 
   void cambiarLoginStatus(){
-    logueado = 1;
+    logueado = true;
     notifyListeners();
   }
   void setIdUsuario(nuevoID){
@@ -74,7 +76,7 @@ class CargandoState extends State<Cargando>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               
-              Image.asset('assets/et29.jpg', width: 200, height: 200,),
+              Image.asset('assets/logo.jpg', width: 200, height: 200,),
               SizedBox(height: 50,),
               CircularProgressIndicator(),
             ],
@@ -87,10 +89,12 @@ class CargandoState extends State<Cargando>{
   }
 
   Future<String> _login() async {
-    MyAppState().addListener(() => mounted ? setState(() {}) : null);
+  
+    final prefs = await SharedPreferences.getInstance();
     await Future.delayed(Duration(seconds: 3)).then((value) {
-      switch(MyAppState().logueado){
-        case 0: 
+      bool userStatus = prefs.containsKey('idusuario');
+      switch(userStatus){
+        case false: 
           Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -101,7 +105,7 @@ class CargandoState extends State<Cargando>{
       );
         
         break;
-      case 1:
+      case true:
         Navigator.pushReplacement(
         context,
         MaterialPageRoute(

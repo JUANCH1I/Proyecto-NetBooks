@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:Presma/main.dart';
 import 'package:Presma/paginas/qr/modelo/prestamoData.dart';
 import 'package:Presma/paginas/qr/modelo/qrdata.dart';
 import 'package:Presma/paginas/usuario/modelo/usuarioModelo.dart';
@@ -15,7 +14,7 @@ class QrControlador {
     );
 }
 Future<List<PrestamoData>> getDatosPrestamo(Usuario usuario) async {
-    final response = await http.post(Uri.parse("http://192.168.0.71/Presma/getdata.php"), body: usuario.toJson());
+    final response = await http.post(Uri.parse("https://gestion.tecnica29de6.edu.ar/presma/getdata.php"), body: usuario.toJson());
     if (response.statusCode == 200){
       List<PrestamoData> datosPrestamo = PrestamoDataFromJson(response.body);
       return datosPrestamo;
@@ -27,26 +26,16 @@ Future<List<PrestamoData>> getDatosPrestamo(Usuario usuario) async {
 
   Future<String> pedirMaterial(QrData datosqr)async{
     
-    final response = await http.post(Uri.parse('http://192.168.0.71/Presma/pedirmaterial.php'),
+    final response = await http.post(Uri.parse('https://gestion.tecnica29de6.edu.ar/presma/pedirmaterial.php'),
     body: datosqr.toJson());
-    if (response.statusCode == 200){
-      return response.body;
-    }
-    else{
-      return "error";
-    }
+    return jsonDecode(response.body);
   }
 
   Future<String> devolverMaterial(QrData datosqr)async{
     
-    final response = await http.post(Uri.parse('http://192.168.0.71/Presma/devolvermaterial.php'),
+    final response = await http.post(Uri.parse('https://gestion.tecnica29de6.edu.ar/presma/devolvermaterial.php'),
     body: datosqr.toJson());
-    if (response.statusCode == 200){
-      return response.body;
-    }
-    else{
-      return "error";
-    }
+    return jsonDecode(response.body);
   }
 }
 

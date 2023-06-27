@@ -1,6 +1,4 @@
 
-import 'package:mobile_scanner/mobile_scanner.dart';
-
 class QrData{
   String? recurso_id;
   String? idusuario;

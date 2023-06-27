@@ -7,6 +7,7 @@ import 'package:Presma/paginas/qr/controlador/qrControlador.dart';
 import 'package:Presma/paginas/usuario/modelo/usuarioModelo.dart';
 import 'package:flutter/material.dart';
 import 'package:Presma/paginas/qr/ui/qrscan.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   
@@ -26,9 +27,11 @@ class HomeState extends State<Home>{
   late int devolverPedir;
   List<PrestamoData> listaPrestamo = [];
   StreamController _streamController = StreamController();
-  Usuario user = Usuario(idusuario: MyAppState().idusuario);
+  
 
   Future getDatosQR() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Usuario user = Usuario(idusuario: prefs.getString('idusuario'));
     listaPrestamo = await QrControlador().getDatosPrestamo(user);
     _streamController.sink.add(listaPrestamo);
   }
@@ -38,8 +41,8 @@ class HomeState extends State<Home>{
   @override
 
  void initState() {
-    getDatosQR();
     MyAppState().addListener(() => mounted ? setState(() {}) : null);
+    getDatosQR();
     super.initState();
     
 }
@@ -59,11 +62,14 @@ void descartar(){
     return Scaffold(
         
         appBar: AppBar(
-          
+          toolbarHeight: 30,
+          title: Text("Presma"),
+          backgroundColor: Color.fromARGB(255, 176, 191, 201)
         ),
         body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 20,),
             Flexible(child: 
               StreamBuilder(
           stream: _streamController.stream,

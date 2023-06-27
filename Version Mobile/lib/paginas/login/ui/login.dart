@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:Presma/main.dart';
 import 'package:Presma/paginas/login/controlador/loginControlador.dart';
 import 'package:Presma/paginas/login/modelo/loginModelo.dart';
@@ -94,12 +94,14 @@ class LoginState extends State<Login>{
                     loginControlador controlador = new loginControlador();
                     listaRespuesta = await controlador.loginRespuesta(requestModelo);
                     if(listaRespuesta[0].user_login_status == '1') {
-                      Provider.of<MyAppState>(context, listen: false).cambiarLoginStatus();
-                      Provider.of<MyAppState>(context, listen: false).setIdUsuario(listaRespuesta[0].user_id);
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.setBool(logueado, true);
+                      prefs.setString('idusuario', listaRespuesta[0].user_id);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
                     }
                     else{
-                       SnackBar(content: Text('Usuario o Contraseña incorrectos'),);
+                      const snackBar = SnackBar(content: Text('Usuario o Contraseña incorrectos'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                     
                   }
