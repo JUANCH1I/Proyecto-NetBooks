@@ -23,14 +23,14 @@
       $('#denyReturn').click(function() {
         handleReturn('denied');
       });
-      let isModalOpen = false; // <-- Declara la variable aquí
+      let isModalOpen = false;
 
       $('#returnNotificationModal').on('shown.bs.modal', function() {
-        isModalOpen = true; // <-- Marca el modal como abierto cuando se muestra
+        isModalOpen = true;
       });
 
       $('#returnNotificationModal').on('hidden.bs.modal', function() {
-        isModalOpen = false; // <-- Marca el modal como cerrado cuando se oculta
+        isModalOpen = false;
       });
 
 
@@ -78,23 +78,32 @@
           </tr>
         `;
       }
-      const sourceModal = new EventSource('actualizarModal.php');
+      let sourceModal;
 
-      sourceModal.onmessage = function(event) {
-        const notificacion = JSON.parse(event.data);
-
-        // Comprobar si el modal está abierto
-        if (!isModalOpen && notificacion) {
-          // Actualizar el contenido del modal
-          document.getElementById('notificationMessageUser').textContent = notificacion.user_name;
-          document.getElementById('notificationMessageResource').textContent = notificacion.recurso_nombre;
-          document.getElementById('notificationMessageTask').textContent = notificacion.opcion;
-          document.getElementById('notificationMessageStart').textContent = notificacion.inicio_prestamo;
-
-          // Abrir el modal
-          $('#returnNotificationModal').modal('show');
+      $('#returnNotificationModal').on('hidden.bs.modal', function() {
+        // Verificar si ya existe un sourceModal para cerrarlo antes de crear uno nuevo
+        if (sourceModal) {
+          sourceModal.close();
         }
-      };
+
+        sourceModal = new EventSource('actualizarModal.php');
+
+        sourceModal.onmessage = function(event) {
+          const notificacion = JSON.parse(event.data);
+
+          // Comprobar si el modal está abierto
+          if (!isModalOpen && notificacion) {
+            // Actualizar el contenido del modal
+            document.getElementById('notificationMessageUser').textContent = 'Alumno: ' + notificacion.user_name;
+            document.getElementById('notificationMessageResource').textContent = 'Material: ' + notificacion.recurso_nombre;
+            document.getElementById('notificationMessageStart').textContent = 'Horario inicio: ' + notificacion.inicio_prestamo;
+            $('#acceptReturn, #denyReturn').show();
+
+            // Abrir el modal
+            $('#returnNotificationModal').modal('show');
+          }
+        };
+      });
 
 
     });
@@ -123,16 +132,17 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/Desarrollo-Web/index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
+          <li><a href="../../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href='../abmPersonas/abmPersonas.php' class="nav-link px-2 text-white">Usuarios</a></li>
           <li><a href="../netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
           <li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Generar Qr</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
         <div class="text-end" bis_skin_checked="1">
-          <a href="#" class="btn btn-warning"><?php echo $_SESSION['user_name']; ?></a>
+          <a href="#" class="btn btn-warning">
+            <?php echo $_SESSION['user_name']; ?>
+          </a>
         </div>
       </div>
     </div>
