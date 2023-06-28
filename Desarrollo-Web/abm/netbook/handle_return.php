@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("ii", $horario_id, $id);
   } else if ($status == 'denied') {
-      $sql = "UPDATE pendiente SET opcion = 'Denied' WHERE id = ?";
+      $sql = "UPDATE registros SET opcion = 'Denied' WHERE idregistro = ?";
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("i", $id);
   }

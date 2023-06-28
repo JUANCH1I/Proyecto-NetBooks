@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("i", $id);
   } else if ($status == 'denied') {
-      $sql = "UPDATE pendiente SET devuelto = 'Denied' WHERE id = ?";
+      $sql = "UPDATE registros SET devuelto = 'Denied' WHERE idregistro = ?"; 
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("i", $id);
   }

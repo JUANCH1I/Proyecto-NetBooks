@@ -1,4 +1,3 @@
--- Active: 1683434845626@@190.228.29.62@3306@bdwebet29
 <?php
 include '../funciones.php';
 
@@ -177,6 +176,7 @@ if ($error) {
       </div>
 
       <div class="modal-body">
+      <p id="devolucionMessage"></p> 
         <p id="devolucionMessageUser">Alumno: <?php echo $notificationDevolucion['user_name']; ?></p>
         <p id="devolucionMessageResource">Material: <?php echo $notificationDevolucion['recurso_nombre']; ?></p>
         <p id="devolucionMessageStart">Horario inicio: <?php echo $notificationDevolucion['inicio_prestamo']; ?></p>

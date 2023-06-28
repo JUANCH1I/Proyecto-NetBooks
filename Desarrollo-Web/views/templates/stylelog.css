@@ -4,6 +4,11 @@
     flex-direction: row;
     align-items: center;
     background-color: cornflowerblue;
+    background-image: url("../templates/logofinal.png");
+    background-size: 50%;
+      background-repeat: no-repeat;
+      background-position: 25px;
+      background-position-x: center;
     justify-content: space-evenly;
 }
 html, body{

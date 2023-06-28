@@ -61,16 +61,17 @@
           }
         });
       }
+
       function handleDevolucion(status) {
         $.ajax({
           url: 'handle_devolucion.php',
           type: 'POST',
           data: {
             status: status,
-            id: notificationIddev, 
+            id: notificationIddev,
           },
           success: function(response) {
-            $('#notificationMessage').text(response);
+            $('#devolucionMessage').text(response);
             $('#acceptDevolucion, #denyDevolucion').hide();
           },
           error: function(error) {
@@ -149,13 +150,17 @@
 
 
   <style>
+    .img > img{
+      margin-right: 5px;
+    }
     footer {
       width: 100%;
-      position: absolute;
+      position: fixed;
       bottom: 0;
     }
   </style>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../template/logofinal.png" type="image/png">
   <title>Presma</title>
 </head>
 
@@ -163,11 +168,7 @@
   <header class="p-3 bg-dark text-white">
     <div class="container" bis_skin_checked="1">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-            <use xlink:href="#bootstrap"></use>
-          </svg>
-        </a>
+        
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="../../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
@@ -177,6 +178,7 @@
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
+        <div class="img"><img src="../template/logofinal.png" alt="" srcset="" height="35px" width="35px" ></div>
         <div class="text-end" bis_skin_checked="1">
           <a href="#" class="btn btn-warning">
             <?php echo $_SESSION['user_name']; ?>

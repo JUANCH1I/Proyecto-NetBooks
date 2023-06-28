@@ -27,27 +27,29 @@ $stmt = $pdo->query("
     SELECT 
         recurso.*, 
         IF(
-            (SELECT registros.opcion 
-             FROM registros 
-             WHERE registros.idrecurso = recurso.recurso_id 
-             ORDER BY inicio_prestamo DESC LIMIT 1) = 'Accepted' 
-            AND 
-            (SELECT registros.devuelto 
-             FROM registros 
-             WHERE registros.idrecurso = recurso.recurso_id 
-             ORDER BY inicio_prestamo DESC LIMIT 1) = 0, 
-            'Reservado', 
+            (registros.opcion = 'Accepted' AND registros.devuelto IN ('Denied', 'Pending')), 
+            'Ocupado', 
             'Libre'
         ) as recurso_estado, 
-        (SELECT users.user_name 
-         FROM registros 
-         JOIN users ON registros.idusuario = users.user_id 
-         WHERE registros.idrecurso = recurso.recurso_id 
-         ORDER BY inicio_prestamo DESC LIMIT 1) as user_name 
+        users.user_name 
     FROM recurso 
-    WHERE recurso.recurso_tipo = 1
+    LEFT JOIN registros 
+        ON recurso.recurso_id = registros.idrecurso 
+        AND registros.idregistro = (
+            SELECT MAX(idregistro) 
+            FROM registros AS r
+            WHERE r.idrecurso = recurso.recurso_id
+        )
+    LEFT JOIN users 
+        ON registros.idusuario = users.user_id 
     ORDER BY recurso.recurso_id
 ");
+
+
+
+
+
+
 ?>
 
 <?php include "../template/header.php"; ?>
