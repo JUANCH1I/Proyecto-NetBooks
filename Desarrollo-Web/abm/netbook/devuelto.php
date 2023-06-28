@@ -91,7 +91,7 @@ if ($error) {
             <th>Material retirado</th>
           </tr>
         </thead>
-        <tbody id="cuerpoDeTabla">
+        <tbody>
           <?php
           if ($alumnos && $sentencia->rowCount() > 0) {
             foreach ($alumnos as $fila) {
@@ -103,7 +103,6 @@ if ($error) {
                 <td><?php echo escapar($fila["fin_prestamo"]); ?></td>
                 <td><?php echo escapar($fila["fechas_extendidas"]); ?></td>
                 <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
-                <td><a href="<?= 'sancion.php?id=' . escapar($fila["idregistro"]) ?>">🗑️Borrar</a></td>
               </tr>
           <?php
             }

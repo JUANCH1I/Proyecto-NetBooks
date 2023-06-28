@@ -72,15 +72,15 @@ if (isset($resultado)) {
       <form method="post">
         <div class="form-group">
           <label for="recurso_id">Codigo del recuros</label>
-          <input type="text" name="recurso_id" id="recurso_id" class="form-control">
+          <input type="text" name="recurso_id" id="recurso_id" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recurso_nombre">Nombre del recurso</label>
-          <input type="text" name="recurso_nombre" id="recurso_nombre" class="form-control">
+          <input type="text" name="recurso_nombre" id="recurso_nombre" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recurso_estado">Estado</label>
-          <select name="recurso_estado" id="recurso_estado" class="input">
+          <select name="recurso_estado" id="recurso_estado" class="input" required>
           <option value="" disabled hidden selected >Estado</option>
             <?php foreach ($datosestado as $dato) : ?>
               <option value="<?= $dato['idEstado'] ?>" class="input"><?= $dato['descripcion_estado'] ?></option>
@@ -89,7 +89,7 @@ if (isset($resultado)) {
         </div><br>
         <div class="form-group">
           <label for="recurso_tipo">Material</label>
-          <select name="recurso_tipo" id="recurso_tipo" class="input">
+          <select name="recurso_tipo" id="recurso_tipo" class="input" required>
           <option value="" disabled hidden selected >Elegir un material</option>
             <?php foreach ($datos as $dato) : ?>
               <option value="<?= $dato['tipo_recurso_id'] ?>" class="input"><?= $dato['tipo_recurso_nombre'] ?></option>

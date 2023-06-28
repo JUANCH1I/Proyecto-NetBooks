@@ -60,3 +60,9 @@ html, body{
     border-radius: 10px;
     margin: 10px;
 }
+.netbook{
+    height: 80px !important;
+    width: 80px !important;
+    flex-wrap: wrap;
+    font-size: 13px;
+}

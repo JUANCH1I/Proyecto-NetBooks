@@ -13,7 +13,7 @@
     $(document).ready(function() {
 
       <?php if (!empty($notification)) { ?>
-        $('#returnNotificationModal').modal('show');
+        $('#returnNotificationModal, #returnDevolucionModal').modal('show');
       <?php } ?>
 
       $('#acceptReturn').click(function() {
@@ -23,16 +23,25 @@
       $('#denyReturn').click(function() {
         handleReturn('denied');
       });
-      let isModalOpen = false;
+      $('#acceptDevolucion').click(function() {
+        handleDevolucion('accepted');
+      });
 
-      $('#returnNotificationModal').on('shown.bs.modal', function() {
+      $('#denyDevolucion').click(function() {
+        handleDevolucion('denied');
+      });
+
+      let isModalOpen = false;
+      let notificationId;
+      let notificacionIddev; // Agrega esta línea para almacenar el id de la notificación
+
+      $('#returnNotificationModal, #returnDevolucionModal').on('shown.bs.modal', function() {
         isModalOpen = true;
       });
 
-      $('#returnNotificationModal').on('hidden.bs.modal', function() {
+      $('#returnNotificationModal, #returnDevolucionModal').on('hidden.bs.modal', function() {
         isModalOpen = false;
       });
-
 
       function handleReturn(status) {
         $.ajax({
@@ -40,8 +49,8 @@
           type: 'POST',
           data: {
             status: status,
-            id: '<?php echo $notification['idregistro']; ?>',
-            hora: $('#horario').val() // nuevo campo
+            id: notificationId, // Cambia esta línea para usar notificationId
+            hora: $('#horario').val()
           },
           success: function(response) {
             $('#notificationMessage').text(response);
@@ -52,6 +61,24 @@
           }
         });
       }
+      function handleDevolucion(status) {
+        $.ajax({
+          url: 'handle_devolucion.php',
+          type: 'POST',
+          data: {
+            status: status,
+            id: notificationIddev, 
+          },
+          success: function(response) {
+            $('#notificationMessage').text(response);
+            $('#acceptDevolucion, #denyDevolucion').hide();
+          },
+          error: function(error) {
+            alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
+          }
+        });
+      }
+
       const source = new EventSource('actualizar.php');
 
       source.onmessage = function(event) {
@@ -65,47 +92,58 @@
 
       function generarFilaDeTabla(alumno) {
         return `
-          <tr>
-            <td>${alumno.idregistro}</td>
-            <td>${alumno.user_name}</td>
-            <td>${alumno.inicio_prestamo}</td>
-            <td>${alumno.fin_prestamo}</td>
-            <td>${alumno.fechas_extendidas}</td>
-            <td>${alumno.recurso_nombre}</td>
-            <td>
-              <a href='sancion.php?id=${alumno.idregistro}'>🗑️Borrar</a>
-            </td>
-          </tr>
-        `;
+  <tr>
+    <td>${alumno.idregistro}</td>
+    <td>${alumno.user_name}</td>
+    <td>${alumno.inicio_prestamo}</td>
+    <td>${alumno.fin_prestamo}</td>
+    <td>${alumno.fechas_extendidas}</td>
+    <td>${alumno.recurso_nombre}</td>
+  </tr>
+`;
       }
-      let sourceModal;
 
-      $('#returnNotificationModal').on('hidden.bs.modal', function() {
-        // Verificar si ya existe un sourceModal para cerrarlo antes de crear uno nuevo
-        if (sourceModal) {
-          sourceModal.close();
+      let sourceModal = new EventSource('actualizarModal.php');
+
+      sourceModal.onmessage = function(event) {
+        const notificacion = JSON.parse(event.data);
+
+        // Comprobar si el modal está abierto
+        if (!isModalOpen && notificacion) {
+          // Actualizar el contenido del modal
+          document.getElementById('notificationMessageUser').textContent = 'Alumno: ' + notificacion.user_name;
+          document.getElementById('notificationMessageResource').textContent = 'Material: ' + notificacion.recurso_nombre;
+          document.getElementById('notificationMessageStart').textContent = 'Horario inicio: ' + notificacion.inicio_prestamo;
+
+          notificationId = notificacion.idregistro; // Agrega esta línea para almacenar el id de la notificación
+
+          $('#acceptReturn, #denyReturn').show();
+
+          // Abrir el modal
+          $('#returnNotificationModal').modal('show');
         }
+      };
+      let sourceDevolucion = new EventSource('actualizarDevolucion.php');
 
-        sourceModal = new EventSource('actualizarModal.php');
+      sourceDevolucion.onmessage = function(event) {
+        const notificacionDevolucion = JSON.parse(event.data);
 
-        sourceModal.onmessage = function(event) {
-          const notificacion = JSON.parse(event.data);
+        // Comprobar si el modal está abierto
+        if (!isModalOpen && notificacionDevolucion) {
+          // Actualizar el contenido del modal
+          document.getElementById('devolucionMessageUser').textContent = 'Alumno: ' + notificacionDevolucion.user_name;
+          document.getElementById('devolucionMessageResource').textContent = 'Material: ' + notificacionDevolucion.recurso_nombre;
+          document.getElementById('devolucionMessageStart').textContent = 'Horario inicio: ' + notificacionDevolucion.inicio_prestamo;
+          document.getElementById('devolucionMessageEnd').textContent = 'Horario final: ' + notificacionDevolucion.horario;
 
-          // Comprobar si el modal está abierto
-          if (!isModalOpen && notificacion) {
-            // Actualizar el contenido del modal
-            document.getElementById('notificationMessageUser').textContent = 'Alumno: ' + notificacion.user_name;
-            document.getElementById('notificationMessageResource').textContent = 'Material: ' + notificacion.recurso_nombre;
-            document.getElementById('notificationMessageStart').textContent = 'Horario inicio: ' + notificacion.inicio_prestamo;
-            $('#acceptReturn, #denyReturn').show();
+          notificationIddev = notificacionDevolucion.idregistro; // Agrega esta línea para almacenar el id de la notificación
 
-            // Abrir el modal
-            $('#returnNotificationModal').modal('show');
-          }
-        };
-      });
+          $('#acceptDevolucion, #denyDevolucion').show();
 
-
+          // Abrir el modal
+          $('#returnDevolucionModal').modal('show');
+        }
+      };
     });
   </script>
 
@@ -134,8 +172,8 @@
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="../../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href='../abmPersonas/abmPersonas.php' class="nav-link px-2 text-white">Usuarios</a></li>
-          <li><a href="../netbook/abm.php" class="nav-link px-2 text-white">NetBooks</a></li>
-          <li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Generar Qr</a></li>
+          <li><a href="../netbook/abm.php" class="nav-link px-2 text-white">Registros</a></li>
+          <li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
