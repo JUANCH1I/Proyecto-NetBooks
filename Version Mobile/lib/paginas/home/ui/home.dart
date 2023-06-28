@@ -62,37 +62,75 @@ void descartar(){
     return Scaffold(
         
         appBar: AppBar(
-          toolbarHeight: 30,
-          title: Text("Presma"),
-          backgroundColor: Color.fromARGB(255, 176, 191, 201)
+          toolbarHeight: 40,
+          title: Text("Presma", style: TextStyle(fontSize: 25),),
+          backgroundColor: Color.fromARGB(255, 223, 236, 243)
         ),
         body: SafeArea(
         child: Column(
           children: [
             SizedBox(height: 20,),
-            Flexible(child: 
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 0,
+              child: 
               StreamBuilder(
           stream: _streamController.stream,
           builder: (context, snapshots){
           
               return ListView.builder(
+                shrinkWrap: true,
                 itemCount: listaPrestamo.length,
                 itemBuilder: ((context, index) {
                 PrestamoData prestamoData = listaPrestamo[index];
                 if(snapshots.hasData){
-                  return ListBody(
-                  children: [
-                    Text('Código del material: ${prestamoData.recurso_id}'),
-                    Text('Inicio del prestamo: ${prestamoData.inicio_prestamo}'),
-                    Text('Fin del prestamo: ${prestamoData.fin_prestamo}'),
-                  ],
-                  
-                );
+                  if(listaPrestamo.isNotEmpty){
+                    return Column(
+                      children: [
+                        Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white70,
+                        border: Border.all(color: Colors.black54), 
+                        boxShadow:[BoxShadow(
+                          color: Color.fromARGB(47, 0, 0, 0),
+                          offset: const Offset(
+                                                5.0,
+                                                5.0,
+                                                ),
+                          blurRadius: 10.0,
+                          spreadRadius: 2.0,
+                        )]),
+                      child: ListBody(
+                                      children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('Código del material: ${prestamoData.recurso_id}', style: TextStyle(fontSize: 17)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('Inicio del prestamo: ${prestamoData.inicio_prestamo}', style: TextStyle(fontSize: 17)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('Fin del prestamo: ${prestamoData.fin_prestamo}', style: TextStyle(fontSize: 17)),
+                      ),
+                      
+                                      ],
+                                      
+                                    ),
+                    ),
+                    SizedBox(height: 15,),
+                      ],
+                    );
+                     
+                  }
+                  else{
+                  return Text("Todavía no se pidió ningún material", style: TextStyle(fontSize: 25),);
+                }
+
                 }
                 else{
-                  return ListTile(
-                    title: Text("No se pidió ningún material todavía"),
-                  );
+                  CircularProgressIndicator();
                 }
                 
                 
@@ -102,24 +140,32 @@ void descartar(){
 
         ),
             ),
-        ElevatedButton(
-              onPressed: () {
-                
-               
-                Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(devolverPedir: 0),));
-                
-              }, 
-              
-              child: Text('Pedir Material')),
-
-        ElevatedButton(
-              onPressed: () {
-                
-                Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(devolverPedir: 1),));
-                
-              }, 
-              
-              child: Text('Devolver Material'))
+            SizedBox(height: 30,),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton( 
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(devolverPedir: 0),));
+                                    }, 
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.5),
+                                    child: Text('Pedir Material', style: (TextStyle(fontSize: 21)),),
+                                  )),
+                                  SizedBox(height: 10,),
+                  ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan(devolverPedir: 1),));
+                                    }, 
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.5),
+                                    child: Text('Devolver Material', style: (TextStyle(fontSize: 21)),),
+                                  ))
+                ],
+              ),
+            ),
+        
           ],
         ) 
        
