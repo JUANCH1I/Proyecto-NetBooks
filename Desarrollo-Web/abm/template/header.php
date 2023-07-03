@@ -17,8 +17,13 @@
       <?php } ?>
 
       $('#acceptReturn').click(function() {
-        handleReturn('accepted');
+        if ($('#horario').val() == null || $('#horario').val() == '') {
+          alert('Por favor, elija un horario.');
+        } else {
+          handleReturn('accepted');
+        }
       });
+
 
       $('#denyReturn').click(function() {
         handleReturn('denied');
@@ -150,9 +155,10 @@
 
 
   <style>
-    .img > img{
+    .img>img {
       margin-right: 5px;
     }
+
     footer {
       width: 100%;
       position: fixed;
@@ -168,7 +174,7 @@
   <header class="p-3 bg-dark text-white">
     <div class="container" bis_skin_checked="1">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
-        
+
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="../../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
@@ -178,7 +184,7 @@
           <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
         </ul>
 
-        <div class="img"><img src="../template/logofinal.png" alt="" srcset="" height="35px" width="35px" ></div>
+        <div class="img"><img src="../template/logofinal.png" alt="" srcset="" height="35px" width="35px"></div>
         <div class="text-end" bis_skin_checked="1">
           <a href="#" class="btn btn-warning">
             <?php echo $_SESSION['user_name']; ?>

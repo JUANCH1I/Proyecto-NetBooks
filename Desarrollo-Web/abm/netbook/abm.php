@@ -149,7 +149,7 @@ if ($error) {
         <div class="form-group">
           <label for="horario">Horario</label>
           <select name="horario" id="horario" class="input">
-            <option value="" disabled hidden selected>Elegir un horario</option>
+            <option value='' disabled hidden selected>Elegir un horario</option>
             <?php foreach ($datos as $dato) : ?>
               <option value="<?= $dato['id']; ?>" class="input"><?= $dato['horario'] ?></option>
             <?php endforeach; ?>

@@ -8,28 +8,29 @@ try {
 
     $stmt = $pdo->query("
     SELECT 
-        recurso.*, 
-        IF(
-            (SELECT registros.opcion 
-             FROM registros 
-             WHERE registros.idrecurso = recurso.recurso_id 
-             ORDER BY inicio_prestamo DESC LIMIT 1) = 'Accepted' 
-            AND 
-            (SELECT registros.devuelto 
-             FROM registros 
-             WHERE registros.idrecurso = recurso.recurso_id 
-             ORDER BY inicio_prestamo DESC LIMIT 1) = 0, 
-            'Reservado', 
-            'Libre'
-        ) as recurso_estado, 
-        (SELECT users.user_name 
-         FROM registros 
-         JOIN users ON registros.idusuario = users.user_id 
-         WHERE registros.idrecurso = recurso.recurso_id 
-         ORDER BY inicio_prestamo DESC LIMIT 1) as user_name 
-    FROM recurso 
-    WHERE recurso.recurso_tipo = 1
-    ORDER BY recurso.recurso_id
+    recurso.*, 
+    IF(
+        (registros.opcion = 'Accepted' AND registros.devuelto IN ('Denied', 'Pending')), 
+        'Ocupado', 
+        'Libre'
+    ) as recurso_estado, 
+    IF(
+        (registros.opcion = 'Accepted' AND registros.devuelto IN ('Denied', 'Pending')), 
+        users.user_name, 
+        'N/A'
+    ) as user_name
+FROM recurso 
+LEFT JOIN registros 
+    ON recurso.recurso_id = registros.idrecurso 
+    AND registros.idregistro = (
+        SELECT MAX(idregistro) 
+        FROM registros AS r
+        WHERE r.idrecurso = recurso.recurso_id
+    )
+LEFT JOIN users 
+    ON registros.idusuario = users.user_id 
+ORDER BY recurso.recurso_id
+
 ");
     $recursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
