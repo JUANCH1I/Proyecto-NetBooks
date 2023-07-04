@@ -172,24 +172,24 @@
 
 <body>
   <header class="p-3 bg-dark text-white">
-    <div class="container" bis_skin_checked="1">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
+  <div class="container" bis_skin_checked="1">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href='../../index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
+                    <li><a href='../netbook/abm.php' class="nav-link px-2 text-white">Registros</a></li>
+                    <?php
+                    if (isset($_SESSION['user_rol'])) {
+                        if ($_SESSION['user_rol'] == 5) {
+                            echo '<li><a href="../abmPersonas/abmPersonas.php" class="nav-link px-2 text-white">Usuarios</a></li>';
+                            echo '<li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>';
+                        }
+                    } ?>
+                    <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
+                </ul>
 
-
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="../../index.php" class="nav-link px-2 text-secondary">Inicio</a></li>
-          <li><a href='../abmPersonas/abmPersonas.php' class="nav-link px-2 text-white">Usuarios</a></li>
-          <li><a href="../netbook/abm.php" class="nav-link px-2 text-white">Registros</a></li>
-          <li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>
-          <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
-        </ul>
-
-        <div class="img"><img src="../template/logofinal.png" alt="" srcset="" height="35px" width="35px"></div>
-        <div class="text-end" bis_skin_checked="1">
-          <a href="#" class="btn btn-warning">
-            <?php echo $_SESSION['user_name']; ?>
-          </a>
+                <div class="text-end" bis_skin_checked="1">
+                    <a href="#" class="btn btn-warning"><?php echo $_SESSION['user_name']; ?></a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
   </header>

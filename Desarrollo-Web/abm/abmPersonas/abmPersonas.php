@@ -14,9 +14,9 @@ try {
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
   if (isset($_POST['apellido'])) {
-    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion,  CASE when activado=0 then 'No' else 'Si' end as activado FROM users inner join rol on users.idRol =rol.idRol AND user_name LIKE '%" . $_POST['apellido'] . "%' limit 100";
+    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion FROM users inner join rol on users.idRol =rol.idRol AND user_name LIKE '%" . $_POST['apellido'] . "%' limit 100";
   } else {
-    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion, activado, CASE when activado=0 then 'No' else 'Si' end as activado FROM users inner join rol on users.idRol =rol.idRol limit 100";
+    $consultaSQL = "SELECT user_id, user_name, user_email, rol_descripcion FROM users inner join rol on users.idRol =rol.idRol limit 100";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -90,10 +90,9 @@ if ($error) {
                 <td><?php echo escapar($fila["user_name"]); ?></td>
                 <td><?php echo escapar($fila["user_email"]); ?></td>
                 <td><?php echo escapar($fila["rol_descripcion"]); ?></td>
-                <td><?php echo escapar($fila["activado"]); ?></td>
                 <td>
-                  <a href="<?= 'borrar.php?id=' . escapar($fila["user_id"]) ?>">🗑️Borrar</a>
-                  <a href="<?= 'editar.php?id=' . escapar($fila["user_id"]) ?>">✏️Editar</a>
+                  <a href="<?= 'borrarUsuario.php?id=' . escapar($fila["user_id"]) ?>">🗑️Borrar</a>
+                  <a href="<?= 'editarUsuario.php?id=' . escapar($fila["user_id"]) ?>">✏️Editar</a>
                 </td>
               </tr>
           <?php
