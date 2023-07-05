@@ -35,7 +35,7 @@ try {
   }
 
   if (isset($_POST['apellido'])) {
-  $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 'Accepted' ORDER BY registros.idregistro desc;";
+    $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 'Accepted' ORDER BY registros.idregistro desc;";
   } else {
     $consultaSQL = "SELECT registros.idregistro, users.user_name, DATE_FORMAT(registros.inicio_prestamo, '%d/%m %H:%i') AS inicio_prestamo, DATE_FORMAT(horario.horario, '%H:%i') AS fin_prestamo, COALESCE(registros.fechas_extendidas, '----') AS fechas_extendidas, recurso.recurso_nombre FROM registros INNER JOIN users ON registros.idusuario = users.user_id INNER JOIN recurso ON recurso.recurso_id = registros.idrecurso INNER JOIN horario ON horario.id = registros.fin_prestamo WHERE registros.opcion <> 'Pending' AND registros.devuelto <> 'Accepted' ORDER BY registros.idregistro desc ;";
   }
@@ -84,7 +84,7 @@ if ($error) {
 
       <form method="post" class="form-inline">
         <div class="form-group mr-3">
-          <input type="text" id="apellido" name="apellido" placeholder="Buscar por alumno" class="form-control">
+          <input type="text" id="apellido" name="apellido" placeholder="Buscar" class="form-control">
         </div>
         <input name="csrf" type="hidden" value="<?php echo escapar($_SESSION['csrf']); ?>"><br>
         <button type="submit" name="submit" class="btn btn-primary">Ver resultados</button>
@@ -143,9 +143,9 @@ if ($error) {
       </div>
 
       <div class="modal-body">
-        <p id="notificationMessageUser">Alumno: <?php echo $notification['user_name']; ?></p>
-        <p id="notificationMessageResource">Material: <?php echo $notification['recurso_nombre']; ?></p>
-        <p id="notificationMessageStart">Horario inicio: <?php echo $notification['inicio_prestamo']; ?></p>
+        <p id="notificationMessageUser">Alumno: <?php echo isset($notification['user_name']) ? $notification['user_name'] : ''; ?></p>
+        <p id="notificationMessageResource">Material: <?php echo isset($notification['recurso_nombre']) ? $notification['recurso_nombre'] : ''; ?></p>
+        <p id="notificationMessageStart">Horario inicio: <?php echo isset($notification['inicio_prestamo']) ? $notification['inicio_prestamo'] : ''; ?></p>
         <div class="form-group">
           <label for="horario">Horario</label>
           <select name="horario" id="horario" class="input">
@@ -176,11 +176,11 @@ if ($error) {
       </div>
 
       <div class="modal-body">
-      <p id="devolucionMessage"></p> 
-        <p id="devolucionMessageUser">Alumno: <?php echo $notificationDevolucion['user_name']; ?></p>
-        <p id="devolucionMessageResource">Material: <?php echo $notificationDevolucion['recurso_nombre']; ?></p>
-        <p id="devolucionMessageStart">Horario inicio: <?php echo $notificationDevolucion['inicio_prestamo']; ?></p>
-        <p id="devolucionMessageEnd">Horario final: <?php echo $notificationDevolucion['horario']; ?></p>
+        <p id="devolucionMessage"></p>
+        <p id="devolucionMessageUser">Alumno: <?php echo isset($notificationDevolucion['user_name']) ? $notificationDevolucion['user_name'] : ''; ?></p>
+        <p id="devolucionMessageResource">Material: <?php echo isset($notificationDevolucion['recurso_nombre']) ? $notificationDevolucion['recurso_nombre'] : ''; ?></p>
+        <p id="devolucionMessageStart">Horario inicio: <?php echo isset($notificationDevolucion['inicio_prestamo']) ? $notificationDevolucion['inicio_prestamo'] : ''; ?></p>
+        <p id="devolucionMessageEnd">Horario final: <?php echo isset($notificationDevolucion['horario']) ? $notificationDevolucion['horario'] : ''; ?></p>
       </div>
 
       <div class="modal-footer">

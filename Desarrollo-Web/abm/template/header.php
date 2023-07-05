@@ -13,8 +13,13 @@
     $(document).ready(function() {
 
       <?php if (!empty($notification)) { ?>
-        $('#returnNotificationModal, #returnDevolucionModal').modal('show');
+        $('#returnNotificationModal').modal('show');
       <?php } ?>
+
+      <?php if (!empty($notificacionDevolucion)) { ?>
+        $('#returnDevolucionModal').modal('show');
+      <?php } ?>
+
 
       $('#acceptReturn').click(function() {
         if ($('#horario').val() == null || $('#horario').val() == '') {
@@ -23,7 +28,6 @@
           handleReturn('accepted');
         }
       });
-
 
       $('#denyReturn').click(function() {
         handleReturn('denied');
@@ -38,13 +42,25 @@
 
       let isModalOpen = false;
       let notificationId;
-      let notificacionIddev; // Agrega esta línea para almacenar el id de la notificación
+      let notificacionIddev;
 
-      $('#returnNotificationModal, #returnDevolucionModal').on('shown.bs.modal', function() {
+      $('#returnNotificationModal').on('shown.bs.modal', function() {
         isModalOpen = true;
       });
 
-      $('#returnNotificationModal, #returnDevolucionModal').on('hidden.bs.modal', function() {
+      $('#returnNotificationModal').on('hidden.bs.modal', function() {
+        isModalOpen = false;
+      });
+
+      $('#returnDevolucionModal').on('shown.bs.modal', function() {
+        if (!isModalOpen) {
+          isModalOpen = true;
+        } else {
+          $('#returnDevolucionModal').modal('hide');
+        }
+      });
+
+      $('#returnDevolucionModal').on('hidden.bs.modal', function() {
         isModalOpen = false;
       });
 
@@ -172,24 +188,24 @@
 
 <body>
   <header class="p-3 bg-dark text-white">
-  <div class="container" bis_skin_checked="1">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href='../../index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
-                    <li><a href='../netbook/abm.php' class="nav-link px-2 text-white">Registros</a></li>
-                    <?php
-                    if (isset($_SESSION['user_rol'])) {
-                        if ($_SESSION['user_rol'] == 5) {
-                            echo '<li><a href="../abmPersonas/abmPersonas.php" class="nav-link px-2 text-white">Usuarios</a></li>';
-                            echo '<li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>';
-                        }
-                    } ?>
-                    <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
-                </ul>
+    <div class="container" bis_skin_checked="1">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href='../../index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
+          <li><a href='../netbook/abm.php' class="nav-link px-2 text-white">Registros</a></li>
+          <?php
+          if (isset($_SESSION['user_rol'])) {
+            if ($_SESSION['user_rol'] == 5) {
+              echo '<li><a href="../abmPersonas/abmPersonas.php" class="nav-link px-2 text-white">Usuarios</a></li>';
+              echo '<li><a href="../netbook/qr.php" class="nav-link px-2 text-white">Recursos</a></li>';
+            }
+          } ?>
+          <li><a href="/Desarrollo-Web/index.php?logout" class="nav-link px-2 text-white">Cerrar sesion</a></li>
+        </ul>
 
-                <div class="text-end" bis_skin_checked="1">
-                    <a href="#" class="btn btn-warning"><?php echo $_SESSION['user_name']; ?></a>
-                </div>
-            </div>
+        <div class="text-end" bis_skin_checked="1">
+          <a href="#" class="btn btn-warning"><?php echo $_SESSION['user_name']; ?></a>
         </div>
+      </div>
+    </div>
   </header>
