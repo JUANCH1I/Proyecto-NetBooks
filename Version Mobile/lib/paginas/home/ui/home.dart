@@ -46,9 +46,6 @@ class HomeState extends State<Home>{
     super.initState();
     
 }
-@override
-
-
 
 void descartar(){
   _streamController.close();
