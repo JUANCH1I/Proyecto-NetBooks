@@ -17,7 +17,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href='/Desarrollo-Web/index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
-                    <li><a href='abm/netbook/abm.php' class="nav-link px-2 text-white">Registros</a></li>
+                    <li><a href='abm/netbook/abm.php' class="nav-link px-2 text-white">Prestamos</a></li>
                     <?php
                     if (isset($_SESSION['user_rol'])) {
                         if ($_SESSION['user_rol'] == 5) {

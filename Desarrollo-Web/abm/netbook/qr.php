@@ -15,9 +15,17 @@ try {
   $conexion = new PDO($dsn, $config['db']['user'], $config['db']['pass'], $config['db']['options']);
 
   if (isset($_POST['apellido'])) {
-    $consultaSQL = "SELECT recurso.recurso_id, recurso.recurso_nombre, estado.descripcion_estado, area.area_nombre FROM recurso INNER JOIN area ON recurso.recurso_tipo = area.id inner join estado on recurso.recurso_estado = estado.idEstado AND recurso.recurso_id LIKE '%" . $_POST['apellido'] . "%' limit 100;";
+    $consultaSQL = "SELECT recurso.recurso_id, recurso.recurso_nombre, IF(
+      (registros.opcion = 'Accepted' AND registros.devuelto IN ('Denied', 'Pending')), 
+      'Ocupado', 
+      'Libre'
+  ) as recurso_estado, area.area_nombre FROM recurso INNER JOIN area ON recurso.recurso_tipo = area.id inner join estado on recurso.recurso_estado = estado.idEstado LEFT JOIN registros on recurso.recurso_id = registros.idrecurso and registros.idregistro = (SELECT MAX(idregistro) FROM registros AS r WHERE r.idrecurso = recurso.recurso_id) AND recurso.recurso_id LIKE '%" . $_POST['apellido'] . "%' limit 100";
   } else {
-    $consultaSQL = "SELECT recurso.recurso_id, recurso.recurso_nombre, estado.descripcion_estado, area.area_nombre FROM recurso INNER JOIN area ON recurso.recurso_tipo = area.id inner join estado on recurso.recurso_estado = estado.idEstado;";
+    $consultaSQL = "SELECT recurso.recurso_id, recurso.recurso_nombre, IF(
+      (registros.opcion = 'Accepted' AND registros.devuelto IN ('Denied', 'Pending')), 
+      'Ocupado', 
+      'Libre'
+  ) as recurso_estado, area.area_nombre FROM recurso INNER JOIN area ON recurso.recurso_tipo = area.id inner join estado on recurso.recurso_estado = estado.idEstado LEFT JOIN registros on recurso.recurso_id = registros.idrecurso and registros.idregistro = (SELECT MAX(idregistro) FROM registros AS r WHERE r.idrecurso = recurso.recurso_id);";
   }
 
   $sentencia = $conexion->prepare($consultaSQL);
@@ -36,7 +44,7 @@ $titulo = isset($_POST['apellido']) ? 'Lista de Materiales (' . $_POST['apellido
 
 <?php
 if ($error) {
-?>
+  ?>
   <div class="container mt-2">
     <div class="row">
       <div class="col-md-12">
@@ -46,7 +54,7 @@ if ($error) {
       </div>
     </div>
   </div>
-<?php
+  <?php
 }
 ?>
 
@@ -71,7 +79,9 @@ if ($error) {
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h2 class="mt-3"><?= $titulo ?></h2>
+      <h2 class="mt-3">
+        <?= $titulo ?>
+      </h2>
       <table class="table">
         <thead>
           <tr>
@@ -79,24 +89,34 @@ if ($error) {
             <th>Material</th>
             <th>Estado</th>
             <th>Area</th>
-          </t
+          </tr>
         </thead>
         <tbody>
           <?php
           if ($alumnos && $sentencia->rowCount() > 0) {
             foreach ($alumnos as $fila) {
-          ?>
+              ?>
               <tr>
-                <td><?php echo escapar($fila["recurso_id"]); ?></td>
-                <td><?php echo escapar($fila["recurso_nombre"]); ?></td>
-                <td><?php echo escapar($fila["descripcion_estado"]); ?></td>
-                <td><?php echo escapar($fila["area_nombre"]); ?></td>
                 <td>
-                  <a href="<?= 'generar_qr.php?id=' . escapar($fila["recurso_id"] . '&nombre=' . escapar(($fila["recurso_nombre"]))) ?>">Generar Qr</a>
+                  <?php echo escapar($fila["recurso_id"]); ?>
+                </td>
+                <td>
+                  <?php echo escapar($fila["recurso_nombre"]); ?>
+                </td>
+                <td>
+                  <?php echo escapar($fila["recurso_estado"]); ?>
+                </td>
+                <td>
+                  <?php echo escapar($fila["area_nombre"]); ?>
+                </td>
+                <td>
+                  <a
+                    href="<?= 'generar_qr.php?id=' . escapar($fila["recurso_id"] . '&nombre=' . escapar(($fila["recurso_nombre"]))) ?>">Generar
+                    Qr</a>
                   <a href="<?= 'abrirqr.php?nombre=' . escapar($fila["recurso_nombre"]) ?>">Abrir Qr</a>
                 </td>
               </tr>
-          <?php
+              <?php
             }
           }
           ?>

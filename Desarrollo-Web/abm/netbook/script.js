@@ -8,7 +8,7 @@ $(document).ready(function() {
         if (estado === 'En mantenimiento') {
             $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook está en mantenimiento');
         } else if (estado === 'Ocupado') {
-            $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook fue reservada por ' + reservadoPor);
+            $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook esta en uso por ' + reservadoPor);
         } else {
             $('#modal-text').html('ID: ' + id + '<br>Nombre: ' + nombre + '<br>Esta netbook está libre');
         }

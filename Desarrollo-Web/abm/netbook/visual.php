@@ -65,14 +65,14 @@ ORDER BY recurso.recurso_id
     </div>
     <div>
         <div id="c2"></div>
-        <p>Reservado</p>
+        <p>En uso</p>
     </div>
     <div>
         <div id="c3"></div>
         <p>Mantenimiento</p>
     </div>
 </div>
-<div style='display: flex; justify-content:center;'>
+<div style='display: flex; justify-content:center; height: 50%; align-items:center;'>
     <div id="netbookContainer" style='display: flex; flex-wrap: wrap; width: 500px;'>
         <?php
         while ($row = $stmt->fetch()) {

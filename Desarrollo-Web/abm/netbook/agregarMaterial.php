@@ -22,11 +22,10 @@ if (isset($_POST['submit'])) {
     $recurso = [
       "recurso_id"   => $_POST['recurso_id'],
       "recurso_nombre"   => $_POST['recurso_nombre'],
-      "recurso_estado"   => $_POST['recurso_estado'],
       "recurso_tipo"   => $_POST['recurso_tipo'],
     ];
 
-    $consultaSQL = "INSERT INTO recurso (recurso_id, recurso_nombre, recurso_estado, recurso_tipo)";
+    $consultaSQL = "INSERT INTO recurso (recurso_id, recurso_nombre, recurso_tipo)";
     $consultaSQL .= "values (:" . implode(", :", array_keys($recurso)) . ")";
 
     $sentencia = $conexion->prepare($consultaSQL);
@@ -41,9 +40,6 @@ $conexion = conexion();
 $statement = $conexion->prepare("SELECT * FROM tipo_recurso");
 $statement->execute();
 $datos = $statement->fetchAll();
-$statement2 = $conexion->prepare("SELECT * FROM estado");
-$statement2->execute();
-$datosestado = $statement2->fetchAll();
 ?>
 
 <?php include '../template/header.php'; ?>
@@ -77,15 +73,6 @@ if (isset($resultado)) {
         <div class="form-group">
           <label for="recurso_nombre">Nombre del recurso</label>
           <input type="text" name="recurso_nombre" id="recurso_nombre" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label for="recurso_estado">Estado</label>
-          <select name="recurso_estado" id="recurso_estado" class="input" required>
-          <option value="" disabled hidden selected >Estado</option>
-            <?php foreach ($datosestado as $dato) : ?>
-              <option value="<?= $dato['idEstado'] ?>" class="input"><?= $dato['descripcion_estado'] ?></option>
-            <?php endforeach; ?>
-          </select>
         </div><br>
         <div class="form-group">
           <label for="recurso_tipo">Material</label>
