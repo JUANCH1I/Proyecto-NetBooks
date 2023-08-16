@@ -57,7 +57,7 @@ if ($error) {
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <a href="/Desarrollo-Web/index.php" class="btn btn-primary mt-4">Volver al inicio</a>
+      <a href="../../index.php" class="btn btn-primary mt-4">Volver al inicio</a>
       <a href="agregarMaterial.php" class="btn btn-primary mt-4">Agregar material</a>
       <a href="visual.php" class="btn btn-primary mt-4">Forma visual</a>
       <a href="abm.php" class="btn btn-primary mt-4">Ver activos</a>
