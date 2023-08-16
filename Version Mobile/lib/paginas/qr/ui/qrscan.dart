@@ -42,7 +42,7 @@ class QrScanState extends State<QrScan>{
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
     String? datosqr = barcode.barcodes.first.displayValue;
-    QrData qr = QrData(recurso_id: datosqr, idusuario: prefs.getString('idusuario') );
+    QrData qr = QrData(recurso_id: datosqr, idusuario: prefs.getString('idusuario'), fecha: DateTime.now().toString());
     switch (widget.devolverPedir){
       case 0:
       String resultado = await QrControlador().pedirMaterial(qr);
