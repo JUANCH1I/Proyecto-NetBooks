@@ -8,10 +8,27 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
   <script>
     $(document).ready(function () {
+      let userLinks = document.querySelectorAll('.user-link');
+
+        userLinks.forEach(function (link) {
+          link.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            let userId = event.target.getAttribute('data-userid');
+
+            // Aquí puedes obtener la información del usuario usando 'userId'
+            // Por ahora, solo estableceremos un mensaje simple como ejemplo.
+            let userInfo = "Información para el usuario con ID: " + userId;
+            document.getElementById('userInfo').textContent = userInfo;
+
+            // Muestra el modal
+            $('#userModal').modal('show');
+          });
+        });
       if (window.location.href.indexOf("abm.php") > -1) {
         <?php if (!empty($notification)) { ?>
           $('#returnNotificationModal').modal('show');
@@ -117,7 +134,7 @@
           return `
   <tr>
     <td>${alumno.idregistro}</td>
-    <td>${alumno.user_name}</td>
+    <td><a href="#" class="user_link">${alumno.user_name}</a></td>
     <td>${alumno.inicio_prestamo}</td>
     <td>${alumno.fin_prestamo}</td>
     <td>${alumno.fechas_extendidas}</td>
@@ -168,6 +185,8 @@
           }
         };
       };
+
+        
     });
   </script>
 

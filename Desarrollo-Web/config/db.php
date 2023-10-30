@@ -1,9 +1,9 @@
 <?php
 
-define("DB_HOST", "190.228.29.62");
+define("DB_HOST", "localhost");
 define("DB_NAME", "bdwebet29");
-define("DB_USER", "bdwebet29");
-define("DB_PASS", "Tecnica29!");
+define("DB_USER", "root");
+define("DB_PASS", "");
 
 function conexion()
 {
