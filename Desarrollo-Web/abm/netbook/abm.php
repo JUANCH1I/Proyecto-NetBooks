@@ -117,7 +117,7 @@ if ($error) {
           ?>
               <tr>
                 <td><?php echo escapar($fila["idregistro"]); ?></td>
-                <td><a href="#" class="user_link"><?php echo escapar($fila["user_name"]); ?></a></td>
+                <td><a href="#" class="user_link" data-username="<?php echo escapar($fila["user_name"]); ?>"><?php echo escapar($fila["user_name"]); ?></a></td>
                 <td><?php echo escapar(($fila["inicio_prestamo"])); ?></td>
                 <td><?php echo escapar($fila["fin_prestamo"]); ?></td>
                 <td><?php echo escapar($fila["fechas_extendidas"]); ?></td>
@@ -191,18 +191,18 @@ if ($error) {
   </div>
 </div>
 
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Información del usuario</h5>
+        <h5 class="modal-title" id="userModalLabel">Detalles del usuario</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <!-- Aquí irá la información del usuario -->
-        <p id="userInfo">Informacion</p>
+        Aquí van los detalles del usuario.
+        <!-- Puedes usar AJAX para cargar dinámicamente los detalles del usuario si lo necesitas -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -210,5 +210,7 @@ if ($error) {
     </div>
   </div>
 </div>
+
+
 
 <?php include "../template/footer.php"; ?>

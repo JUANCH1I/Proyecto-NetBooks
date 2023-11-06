@@ -5,30 +5,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
   <script>
-    $(document).ready(function () {
-      let userLinks = document.querySelectorAll('.user-link');
-
-        userLinks.forEach(function (link) {
-          link.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            let userId = event.target.getAttribute('data-userid');
-
-            // Aquí puedes obtener la información del usuario usando 'userId'
-            // Por ahora, solo estableceremos un mensaje simple como ejemplo.
-            let userInfo = "Información para el usuario con ID: " + userId;
-            document.getElementById('userInfo').textContent = userInfo;
-
-            // Muestra el modal
-            $('#userModal').modal('show');
-          });
-        });
+    $(document).ready(function() {
       if (window.location.href.indexOf("abm.php") > -1) {
         <?php if (!empty($notification)) { ?>
           $('#returnNotificationModal').modal('show');
@@ -39,7 +21,7 @@
         <?php } ?>
 
 
-        $('#acceptReturn').click(function () {
+        $('#acceptReturn').click(function() {
           if ($('#horario').val() == null || $('#horario').val() == '') {
             alert('Por favor, elija un horario.');
           } else {
@@ -47,14 +29,14 @@
           }
         });
 
-        $('#denyReturn').click(function () {
+        $('#denyReturn').click(function() {
           handleReturn('denied');
         });
-        $('#acceptDevolucion').click(function () {
+        $('#acceptDevolucion').click(function() {
           handleDevolucion('accepted');
         });
 
-        $('#denyDevolucion').click(function () {
+        $('#denyDevolucion').click(function() {
           handleDevolucion('denied');
         });
 
@@ -62,15 +44,15 @@
         let notificationId;
         let notificacionIddev;
 
-        $('#returnNotificationModal').on('shown.bs.modal', function () {
+        $('#returnNotificationModal').on('shown.bs.modal', function() {
           isModalOpen = true;
         });
 
-        $('#returnNotificationModal').on('hidden.bs.modal', function () {
+        $('#returnNotificationModal').on('hidden.bs.modal', function() {
           isModalOpen = false;
         });
 
-        $('#returnDevolucionModal').on('shown.bs.modal', function () {
+        $('#returnDevolucionModal').on('shown.bs.modal', function() {
           if (!isModalOpen) {
             isModalOpen = true;
           } else {
@@ -78,9 +60,19 @@
           }
         });
 
-        $('#returnDevolucionModal').on('hidden.bs.modal', function () {
+        $('#returnDevolucionModal').on('hidden.bs.modal', function() {
           isModalOpen = false;
         });
+
+        let userLink = document.querySelectorAll('.user_link');
+
+        userLink.forEach(function(link) {
+          link.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            $('#userModal').modal('show');
+          })
+        })
 
         function handleReturn(status) {
           $.ajax({
@@ -91,15 +83,80 @@
               id: notificationId, // Cambia esta línea para usar notificationId
               hora: $('#horario').val()
             },
-            success: function (response) {
+            success: function(response) {
               $('#notificationMessage').text(response);
               $('#acceptReturn, #denyReturn').hide();
             },
-            error: function (error) {
+            error: function(error) {
               alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
             }
           });
         }
+
+        function abrirModalConNombre(userName) {
+          $.ajax({
+            url: 'getUserLast.php', // Asegúrate de que esta es la ruta correcta a tu script PHP
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              user_name: userName
+            },
+            success: function(data) {
+              if (data.error) {
+                alert('Error: ' + data.error);
+              } else {
+                var html = crearHTMLConPrestamos(data);
+                $('#userModal .modal-body').html(html);
+                $('#userModal').modal('show');
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              alert('Error al obtener los datos: ' + textStatus);
+            }
+          });
+        }
+
+        function crearHTMLConPrestamos(data) {
+          var html = '<table class="table">';
+          html += `
+    <thead>
+      <tr>
+        <th>Nombre del Recurso</th>
+        <th>Inicio del Préstamo</th>
+        <th>Fin del Préstamo</th>
+        <th>Fechas Extendidas</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+          data.forEach(function(prestamo) {
+            html += `
+      <tr>
+        <td>${escaparHTML(prestamo.recurso_nombre)}</td>
+        <td>${escaparHTML(prestamo.inicio_prestamo)}</td>
+        <td>${escaparHTML(prestamo.horario)}</td>
+        <td>${escaparHTML(prestamo.fechas_extendidas || 'N/A')}</td>
+      </tr>
+    `;
+          });
+
+          html += '</tbody></table>';
+          return html;
+        }
+
+
+
+        // Función auxiliar para escapar caracteres especiales de HTML y prevenir inyecciones XSS
+        function escaparHTML(str) {
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
 
         function handleDevolucion(status) {
           $.ajax({
@@ -109,43 +166,49 @@
               status: status,
               id: notificationIddev,
             },
-            success: function (response) {
+            success: function(response) {
               $('#devolucionMessage').text(response);
               $('#acceptDevolucion, #denyDevolucion').hide();
             },
-            error: function (error) {
+            error: function(error) {
               alert('Hubo un error al manejar la devolución. Por favor, inténtalo de nuevo.');
             }
           });
         }
 
         const source = new EventSource('actualizar.php');
-
-        source.onmessage = function (event) {
+        source.onmessage = function(event) {
           const alumnos = JSON.parse(event.data);
           let html = '';
           alumnos.forEach(alumno => {
             html += generarFilaDeTabla(alumno);
           });
           document.getElementById('cuerpoDeTabla').innerHTML = html;
+
+          // Reasigna los manejadores de eventos a los enlaces .user_link después de la actualización
+          $('.user_link').off('click').on('click', function(e) {
+            e.preventDefault();
+            var userName = $(this).data('username');
+            abrirModalConNombre(userName); // Llama a la función para abrir el modal con el nombre del usuario
+          });
         };
 
         function generarFilaDeTabla(alumno) {
           return `
-  <tr>
-    <td>${alumno.idregistro}</td>
-    <td><a href="#" class="user_link">${alumno.user_name}</a></td>
-    <td>${alumno.inicio_prestamo}</td>
-    <td>${alumno.fin_prestamo}</td>
-    <td>${alumno.fechas_extendidas}</td>
-    <td>${alumno.recurso_nombre}</td>
-  </tr>
-`;
+      <tr>
+        <td>${escaparHTML(alumno.idregistro)}</td>
+        <td><a href="#" class="user_link" data-username="${escaparHTML(alumno.user_name)}">${escaparHTML(alumno.user_name)}</a></td>
+        <td>${escaparHTML(alumno.inicio_prestamo)}</td>
+        <td>${escaparHTML(alumno.fin_prestamo)}</td>
+        <td>${escaparHTML(alumno.fechas_extendidas)}</td>
+        <td>${escaparHTML(alumno.recurso_nombre)}</td>
+      </tr>
+    `;
         }
 
         let sourceModal = new EventSource('actualizarModal.php');
 
-        sourceModal.onmessage = function (event) {
+        sourceModal.onmessage = function(event) {
           const notificacion = JSON.parse(event.data);
 
           // Comprobar si el modal está abierto
@@ -165,7 +228,7 @@
         };
         let sourceDevolucion = new EventSource('actualizarDevolucion.php');
 
-        sourceDevolucion.onmessage = function (event) {
+        sourceDevolucion.onmessage = function(event) {
           const notificacionDevolucion = JSON.parse(event.data);
 
           // Comprobar si el modal está abierto
@@ -185,8 +248,6 @@
           }
         };
       };
-
-        
     });
   </script>
 
@@ -210,8 +271,7 @@
 <body>
   <header class="p-3 bg-dark text-white">
     <div class="container" bis_skin_checked="1">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
-        bis_skin_checked="1">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" bis_skin_checked="1">
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href='../../index.php' class="nav-link px-2 text-secondary">Inicio</a></li>
           <li><a href='../netbook/abm.php' class="nav-link px-2 text-white">Prestamos</a></li>
